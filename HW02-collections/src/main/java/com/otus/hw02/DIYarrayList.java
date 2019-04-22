@@ -1,6 +1,7 @@
 package com.otus.hw02;
 import java.util.*;
 import java.util.function.UnaryOperator;
+import java.io.IOException;
 
 public class DIYarrayList <T> implements List<T> {
 
@@ -60,20 +61,39 @@ public class DIYarrayList <T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        Object[] newArray = new Object[count];
+        for(int i=0; i<count; i++){
+            newArray[i]=this.get(i);
+        }
+        return newArray;
     }
 
     //Сделать расширение массива
     @Override
-    public <T1> T1[] toArray(T1[] a) {
-        for(int i=0; i<count; i++){
-            a[i]=(T1) this.get(i);
+        public <T> T[] toArray(T[] a) {
+
+        if(a.length < count) {
+
+            Arrays.copyOf(a, count);
+            for(int i=0; i<count; i++){
+                a[i]= (T) this.get(i);
+            }
+
+            //a = (T[]) newArray;
+            System.out.println("Массив newArray: " + a.getClass() + Arrays.toString(a));
+            return  a;
+        }
+        else {
+            for (int i = 0; i < count; i++) {
+               a[i] = (T) this.get(i);
+              //System.arraycopy(array, 0, a, 0, count);
+
+            }
         }
         return a;
     }
 
-
-    //Реализован
+    //Добавляет новый элемент в конец коллекции
     @Override
     public boolean add(T t) {
         if(count == array.length-1) {
@@ -85,10 +105,9 @@ public class DIYarrayList <T> implements List<T> {
         return true;
     }
 
-
     @Override
     public boolean remove(Object o) {
-        throw new NullPointerException("remove");
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -118,7 +137,6 @@ public class DIYarrayList <T> implements List<T> {
 
     @Override
     public void clear() {
-
     }
 
     //Реализован
@@ -131,8 +149,7 @@ public class DIYarrayList <T> implements List<T> {
     @Override
     public T set(int index, T element) {
         array[index]=element;
-        T a = (T)array[index];
-        return a;
+        return (T)array[index];
     }
 
     @Override
@@ -142,6 +159,7 @@ public class DIYarrayList <T> implements List<T> {
 
     @Override
     public T remove(int index) {
+
         return null;
     }
 
@@ -153,11 +171,13 @@ public class DIYarrayList <T> implements List<T> {
 
     @Override
     public ListIterator<T> listIterator() {
+
         return null;
     }
 
     @Override
     public ListIterator<T> listIterator(int index) {
+
         return null;
     }
 
@@ -173,6 +193,9 @@ public class DIYarrayList <T> implements List<T> {
 
     @Override
     public void sort(Comparator<? super T> c) {
+
+        Arrays.sort((T[]) array, 0, count, c);
+
 
     }
 
