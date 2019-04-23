@@ -37,24 +37,59 @@ public class CollectionsHW {
 //        System.out.println("secondLs 2");
 //        printCollection(secondLs);
 
+//Проверка addAll:
+
+//        Collections.addAll(ls, 24,11,32);
+//        printCollection(ls);
+
+
+//-----------Другие методы-------------------------------------------
+
+
 //        System.out.println("collection size: "+ls.size());
+
 //        System.out.println("element number "+ 0 + " = "+ls.get(0));
-//        //ls.set(21, null);
+
+//        ls.set(21, null);
 //        System.out.println("new element number "+ 21 + " = "+ls.get(21));
 //        printCollection(ls);
 //        System.out.println("element contains null: "+ls.contains(null)+", index: "+ls.indexOf(null));
+
 //        System.out.println("collection is empty "+ls.isEmpty());
-//        System.out.println("element remove 21: "+ ls.remove(0));
-        Object[] a = ls.toArray();
-        System.out.println("Массив Object[] a: " + Arrays.toString(a));
-//
-//
+
+//        printCollection(ls);
+//        System.out.println("element remove 3: "+ ls.remove(3));
+//        printCollection(ls);
+
+//        printCollection(ls);
+//        System.out.println("element remove 2: "+ ls.remove(ls.get(2)));
+//        printCollection(ls);
+
+
+//        Object[] a = ls.toArray();
+//        System.out.println("Массив Object[] a: " + Arrays.toString(a));
+
 //        Integer[] b = new Integer[10];
 //        b=ls.toArray(b);
 //        System.out.println("Массив " + b.getClass()+ " "+ Arrays.toString(b));
 //
 //        ls.add(4,25);
 //        printCollection(ls);
+
+//        System.out.println("ls");
+//        printCollection(ls);
+//        thirdLs=ls.subList(3,10);
+//        System.out.println("thirdLs");
+//        printCollection(thirdLs);
+
+//        System.out.println("ls");
+//        printCollection(ls);
+//        thirdLs=ls.subList(3,10);
+//        System.out.println("thirdLs");
+//        printCollection(thirdLs);
+//        System.out.println("thirdLs is subcollection of ls: " + ls.containsAll(thirdLs));
+
+
 
     }
      public static void printCollection(List o){

@@ -56,7 +56,20 @@ public class DIYarrayList <T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        throw new UnsupportedOperationException();
+        Iterator it =new Iterator() {
+            private int currentIndex = 0;
+
+            @Override
+            public boolean hasNext() {
+                return currentIndex < count && array[currentIndex] != null;
+            }
+
+            @Override
+            public Object next() {
+                return array[currentIndex++];
+            }
+        };
+        return it;
     }
 
 
@@ -77,6 +90,7 @@ public class DIYarrayList <T> implements List<T> {
         if (a.length < count)
              return (T[]) Arrays.copyOf(array, count, a.getClass());
 
+//-----Не работает-------------------------
 //        if(a.length < count) {
 //            Object b[] = new Object[count];
 //            for(int i=0; i<count; i++){
@@ -107,14 +121,27 @@ public class DIYarrayList <T> implements List<T> {
         return true;
     }
 
+
+    //Удаляет из коллекции элемент со значением о
     @Override
     public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
+        if (indexOf(o)<0)
+            return false;
+        while (indexOf(o)>0)
+        remove(indexOf(o));
+        return true;
     }
 
+
+    //Проверка вхождения коллекции
     @Override
     public boolean containsAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
+        boolean b=true;
+        if (b==true) {
+            for (Object a : c)
+                b=this.contains(a);
+        }
+        return b;
     }
 
     @Override
@@ -141,11 +168,13 @@ public class DIYarrayList <T> implements List<T> {
     public void clear() {
     }
 
+
     //Возвращает элемент коллекции с индексом index
     @Override
     public T get(int index) {
         return (T) array[index];
     }
+
 
     //Устанавливает значение element элемента с индексом index
     @Override
@@ -166,10 +195,14 @@ public class DIYarrayList <T> implements List<T> {
             count++;
     }
 
+
+    //Удаляет из коллекции элемент с индексом index и возвращает значение удаленного элемента
     @Override
     public T remove(int index) {
-
-        return null;
+        Object a = this.get(index);
+        System.arraycopy(array, index+1, array, index, count-index-1);
+        count--;
+        return (T)a;
     }
 
 
@@ -236,26 +269,31 @@ public class DIYarrayList <T> implements List<T> {
         return it;
     }
 
+    //Возвращает часть коллекции
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
-        return null;
+        List<T> newLs= new DIYarrayList<>();
+        for(int i=fromIndex; i<=toIndex; i++)
+        newLs.add(this.get(i));
+        return newLs;
     }
+
 
     @Override
     public void replaceAll(UnaryOperator<T> operator) {
-
+        throw new UnsupportedOperationException();
     }
+
+
     // Сортировка коллекции
     @Override
     public void sort(Comparator<? super T> c) {
-
         Arrays.sort((T[]) array, 0, count, c);
-
-
     }
+
 
     @Override
     public Spliterator<T> spliterator() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }
