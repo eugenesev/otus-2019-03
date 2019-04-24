@@ -1,12 +1,10 @@
 package com.otus.hw02;
 import java.util.*;
 import java.util.function.UnaryOperator;
-import java.io.IOException;
 
 public class DIYarrayList <T> implements List<T> {
 
     private final int INIT_SIZE = 10;
-    //private final int CUT_RATE = 4;
     private Object[] array = new Object[INIT_SIZE];
     private int count = 0;
 
@@ -137,7 +135,7 @@ public class DIYarrayList <T> implements List<T> {
     @Override
     public boolean containsAll(Collection<?> c) {
         boolean b=true;
-        if (b==true) {
+        if (b) {
             for (Object a : c)
                 b=this.contains(a);
         }
@@ -146,26 +144,26 @@ public class DIYarrayList <T> implements List<T> {
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends T> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void clear() {
+    public void clear() {throw new UnsupportedOperationException();
     }
 
 
@@ -208,7 +206,7 @@ public class DIYarrayList <T> implements List<T> {
 
     @Override
     public int lastIndexOf(Object o) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
