@@ -1,8 +1,9 @@
 package com.otus.hw02;
+
 import java.util.*;
 import java.util.function.UnaryOperator;
 
-public class DIYarrayList <T> implements List<T> {
+public class DIYarrayList<T> implements List<T> {
 
     private final int INIT_SIZE = 10;
     private Object[] array = new Object[INIT_SIZE];
@@ -19,14 +20,14 @@ public class DIYarrayList <T> implements List<T> {
     //Проверка пустой коллекции
     @Override
     public boolean isEmpty() {
-        return count==0;
-        }
+        return count == 0;
+    }
 
 
     //Возвращает true, если элемент o входит в коллекцию
     @Override
     public boolean contains(Object o) {
-        return indexOf(o)>=0;
+        return indexOf(o) >= 0;
     }
 
 
@@ -35,36 +36,30 @@ public class DIYarrayList <T> implements List<T> {
     @Override
     public int indexOf(Object o) {
 
-        if (o == null) {
-            for (int i = 0; i < count; i++) {
-                if (array[i] == null) {
-                    return i;
-                }
-            }
-        }
-        else {
-            for (int i = 0; i < count; i++) {
-                if (o.equals(array[i])) {
-                    return i;
-                }
-            }
+        for (int i = 0; i < count; i++) {
+            if (o == null) {
+                if (array[i] == null) return i;
+            } else if (o.equals(array[i])) return i;
         }
         return -1;
     }
 
     @Override
     public Iterator<T> iterator() {
-        Iterator it =new Iterator() {
+        Iterator it = new Iterator() {
             private int currentIndex = 0;
 
             @Override
             public boolean hasNext() {
-                return currentIndex < count && array[currentIndex] != null;
+                return currentIndex < count;
             }
 
             @Override
             public Object next() {
-                return array[currentIndex++];
+                if (hasNext()) {
+                    return array[currentIndex++];
+                }
+                return null;
             }
         };
         return it;
@@ -75,18 +70,18 @@ public class DIYarrayList <T> implements List<T> {
     @Override
     public Object[] toArray() {
         Object[] newArray = new Object[count];
-        for(int i=0; i<count; i++){
-            newArray[i]=this.get(i);
+        for (int i = 0; i < count; i++) {
+            newArray[i] = this.get(i);
         }
         return newArray;
     }
 
 
     // Переписывает коллекцию в массив тогоже типа, что и тип переданного в параметр массива
-   @Override
-        public <T> T[] toArray(T[] a) {
+    @Override
+    public <T> T[] toArray(T[] a) {
         if (a.length < count)
-             return (T[]) Arrays.copyOf(array, count, a.getClass());
+            return (T[]) Arrays.copyOf(array, count, a.getClass());
 
 //-----Не работает-------------------------
 //        if(a.length < count) {
@@ -98,9 +93,9 @@ public class DIYarrayList <T> implements List<T> {
 //         return  a;
 //        }
 //        else {
-            for (int i = 0; i < count; i++) {
-               a[i] = (T) this.get(i);
-              //System.arraycopy(array, 0, a, 0, count);
+        for (int i = 0; i < count; i++) {
+            a[i] = (T) this.get(i);
+            //System.arraycopy(array, 0, a, 0, count);
 //            }
         }
         return a;
@@ -110,12 +105,13 @@ public class DIYarrayList <T> implements List<T> {
     //Добавляет новый элемент в конец коллекции
     @Override
     public boolean add(T t) {
-        if(count == array.length-1) {
-            Object[] newArray = new Object[array.length*2];
-            System.arraycopy(array, 0,newArray,0,array.length);
-            array=newArray;
+        if (count == array.length - 1) {
+            final int NEW_LENGTH = array.length * 2;
+            Object[] newArray = new Object[NEW_LENGTH];
+            System.arraycopy(array, 0, newArray, 0, array.length);
+            array = newArray;
         }
-        array[count++]=t;
+        array[count++] = t;
         return true;
     }
 
@@ -123,10 +119,10 @@ public class DIYarrayList <T> implements List<T> {
     //Удаляет из коллекции элемент со значением о
     @Override
     public boolean remove(Object o) {
-        if (indexOf(o)<0)
+        if (indexOf(o) < 0)
             return false;
-        while (indexOf(o)>0)
-        remove(indexOf(o));
+        while (indexOf(o) > 0)
+            remove(indexOf(o));
         return true;
     }
 
@@ -134,10 +130,10 @@ public class DIYarrayList <T> implements List<T> {
     //Проверка вхождения коллекции
     @Override
     public boolean containsAll(Collection<?> c) {
-        boolean b=true;
-        if (b) {
-            for (Object a : c)
-                b=this.contains(a);
+        boolean b = true;
+        for (Object a : c) {
+            b = this.contains(a);
+            if (!b) break;
         }
         return b;
     }
@@ -163,13 +159,16 @@ public class DIYarrayList <T> implements List<T> {
     }
 
     @Override
-    public void clear() {throw new UnsupportedOperationException();
+    public void clear() {
+        throw new UnsupportedOperationException();
     }
 
 
     //Возвращает элемент коллекции с индексом index
     @Override
     public T get(int index) {
+        if (index > count)
+            throw new ArrayIndexOutOfBoundsException("There are " + count + " elements in your collection");
         return (T) array[index];
     }
 
@@ -177,20 +176,24 @@ public class DIYarrayList <T> implements List<T> {
     //Устанавливает значение element элемента с индексом index
     @Override
     public T set(int index, T element) {
-        array[index]=element;
-        return (T)array[index];
+        if (index > count)
+            throw new ArrayIndexOutOfBoundsException("There are " + count + " elements in your collection");
+        array[index] = element;
+        return (T) array[index];
     }
 
 
     //Добавляет элемент в определенное место в коллекции, сдвигая остальные элементы
     @Override
     public void add(int index, T element) {
-            Object[] newArray = new Object[array.length+1];
-            System.arraycopy(array, 0, newArray, 0, index);
-            newArray[index]=element;
-            System.arraycopy(array, index, newArray, index+1, array.length-index);
-            array=newArray;
-            count++;
+        if (index > count)
+            throw new ArrayIndexOutOfBoundsException("There are " + count + " elements in your collection");
+        Object[] newArray = new Object[array.length + 1];
+        System.arraycopy(array, 0, newArray, 0, index);
+        newArray[index] = element;
+        System.arraycopy(array, index, newArray, index + 1, array.length - index);
+        array = newArray;
+        count++;
     }
 
 
@@ -198,9 +201,9 @@ public class DIYarrayList <T> implements List<T> {
     @Override
     public T remove(int index) {
         Object a = this.get(index);
-        System.arraycopy(array, index+1, array, index, count-index-1);
+        System.arraycopy(array, index + 1, array, index, count - index - 1);
         count--;
-        return (T)a;
+        return (T) a;
     }
 
 
@@ -218,6 +221,7 @@ public class DIYarrayList <T> implements List<T> {
     public ListIterator<T> listIterator(int index) {
         ListIterator it = new ListIterator() {
             private int currentIndex = index;
+
             @Override
             public boolean hasNext() {
                 return currentIndex < count && array[currentIndex] != null;
@@ -225,7 +229,9 @@ public class DIYarrayList <T> implements List<T> {
 
             @Override
             public Object next() {
-                return array[currentIndex++];
+                if (hasNext())
+                    return array[currentIndex++];
+                return null;
             }
 
             @Override
@@ -255,7 +261,7 @@ public class DIYarrayList <T> implements List<T> {
 
             @Override
             public void set(Object o) {
-                array[currentIndex-1] = o;
+                array[currentIndex - 1] = o;
             }
 
             @Override
@@ -270,9 +276,11 @@ public class DIYarrayList <T> implements List<T> {
     //Возвращает часть коллекции
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
-        List<T> newLs= new DIYarrayList<>();
-        for(int i=fromIndex; i<=toIndex; i++)
-        newLs.add(this.get(i));
+        if (toIndex > count)
+            throw new ArrayIndexOutOfBoundsException("There are " + count + " elements in your collection");
+        List<T> newLs = new DIYarrayList<>();
+        for (int i = fromIndex; i <= toIndex; i++)
+            newLs.add(this.get(i));
         return newLs;
     }
 
