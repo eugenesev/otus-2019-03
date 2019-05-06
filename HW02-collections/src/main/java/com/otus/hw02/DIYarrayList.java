@@ -37,9 +37,7 @@ public class DIYarrayList<T> implements List<T> {
     public int indexOf(Object o) {
 
         for (int i = 0; i < count; i++) {
-            if (o == null) {
-                if (array[i] == null) return i;
-            } else if (o.equals(array[i])) return i;
+            if ((o == null && array[i] == null) || (o != null && o.equals(array[i]))) return i;
         }
         return -1;
     }
@@ -106,8 +104,9 @@ public class DIYarrayList<T> implements List<T> {
     @Override
     public boolean add(T t) {
         if (count == array.length - 1) {
-            final int NEW_LENGTH = array.length * 2;
-            Object[] newArray = new Object[NEW_LENGTH];
+            final int ARRAY_SIZE_GROW_FACTOR = 2;
+            int newLength = array.length * ARRAY_SIZE_GROW_FACTOR;
+            Object[] newArray = new Object[newLength];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
         }
@@ -167,8 +166,7 @@ public class DIYarrayList<T> implements List<T> {
     //Возвращает элемент коллекции с индексом index
     @Override
     public T get(int index) {
-        if (index > count)
-            throw new ArrayIndexOutOfBoundsException("There are " + count + " elements in your collection");
+        Objects.checkIndex(index, array.length);
         return (T) array[index];
     }
 
@@ -176,8 +174,7 @@ public class DIYarrayList<T> implements List<T> {
     //Устанавливает значение element элемента с индексом index
     @Override
     public T set(int index, T element) {
-        if (index > count)
-            throw new ArrayIndexOutOfBoundsException("There are " + count + " elements in your collection");
+        Objects.checkIndex(index, array.length);
         array[index] = element;
         return (T) array[index];
     }
