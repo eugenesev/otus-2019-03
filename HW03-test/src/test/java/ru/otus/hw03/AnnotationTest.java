@@ -1,5 +1,9 @@
 package ru.otus.hw03;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class AnnotationTest {
 
     private static FileRW fileRW;
@@ -10,18 +14,24 @@ public class AnnotationTest {
 
     @BeforeAll
     public static void beforeAll() {
+        //throw new UnsupportedOperationException();
         System.out.println("---------------Test before all tests---------------");
     }
 
     @Before
-    public void beforeFileRWTest() {
-        System.out.println("------BeforeEach------");
+    public void beforeFileRWTest() throws IOException {
+        System.out.println("------BeforeEachTest------");
+        List<Integer> numbers = new ArrayList<>(3);
+        numbers.add(2);
+        numbers.add(5);
+        numbers.add(3);
         fileRW = new FileRW("Hello");
+        fileRW.write(numbers);
     }
 
     @After
     void afterFileRWTest() {
-        System.out.println("------AfterEach------");
+        System.out.println("------AfterEachTest------");
         fileRW.dispose();
     }
 
@@ -42,8 +52,9 @@ public class AnnotationTest {
     }
 
     @Test
-    void methodTest2() {
+    void methodTest2() throws IOException {
         System.out.println("Test 2");
+        fileRW.read();
     }
 
 }
