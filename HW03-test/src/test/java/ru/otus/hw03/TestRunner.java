@@ -1,66 +1,31 @@
 package ru.otus.hw03;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 public class TestRunner {
 
-    static Object testObj;
-    static Method[] declaredMethods;
 //--------
-
-    public static void main(String[] args) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        run(AnnotationTest.class);
-    }
-
-    private static void run(Class<?> testClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static void run(Class<?>testClass) throws Exception {
 // Выводим название класса-теста и получаем его конструктор по умолчанию
         System.out.println("---------------Testing " + testClass.toString() + "---------------");
-        Constructor<?>[] constructors = testClass.getDeclaredConstructors();
-        Constructor constructor = constructors[0];
-//--------
-
-// Получаем методы задекларированные в классе-тесте
-        declaredMethods = testClass.getDeclaredMethods();
+        TestingContext testingContext = new TestingContext(testClass);
 //--------
 
 // Вызываем все методы помеченные аннотацией BeforeAll
-        if (runAnnotatedTest(BeforeAll.class, null)) {
-            testObj = constructor.newInstance();
+        if (testingContext.invokeAnnotatedMethods(BeforeAll.class)) {
+            Object testObj = testingContext.getTestObject();
             // Вызываем все методы помеченные аннотацией Before
-            if (runAnnotatedTest(Before.class, testObj)) {
+            if (testingContext.invokeAnnotatedMethods(Before.class,testObj)) {
                 // Вызываем все методы помеченные аннотацией Test
-                runAnnotatedTest(Test.class, testObj);
+                testingContext.invokeAnnotatedMethods(Test.class,testObj);
             }
             // Вызываем все методы помеченные аннотацией After
-            runAnnotatedTest(After.class, testObj);
+            testingContext.invokeAnnotatedMethods(After.class,testObj);
         }
 //--------
 
         // Вызываем все методы помеченные аннотацией AfterAll
-        runAnnotatedTest(AfterAll.class, null);
+        testingContext.invokeAnnotatedMethods(AfterAll.class);
 
 //--------
 
     }
-
-    public static boolean runAnnotatedTest(Class<? extends Annotation> annotationClass, Object testObj) throws IllegalAccessException {
-        boolean status = false;
-        for (Method method : declaredMethods) {
-            if (method.isAnnotationPresent(annotationClass)) {
-                System.out.println("Annotation @" + (annotationClass.getName().substring(annotationClass.getPackageName().length() + 1)) + " present");
-                try {
-                    method.invoke(testObj);
-                    status = true;
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                    status = false;
-                }
-            }
-        }
-        return status;
-    }
-
 }

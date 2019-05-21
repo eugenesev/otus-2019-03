@@ -1,14 +1,14 @@
 package ru.otus.hw03;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class FileRW {
+
     private final String fName;
     FileRW(String fName){
         this.fName=fName;

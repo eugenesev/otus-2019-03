@@ -33,7 +33,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.hw03.TestRunner</mainClass>
+                            <mainClass>TestRunner</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

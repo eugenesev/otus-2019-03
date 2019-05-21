@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnnotationTest {
+public class FileRWTest {
 
     private static FileRW fileRW;
 
-    AnnotationTest() {
-        System.out.println("AnnotationTest object created");
+    FileRWTest() {
+        System.out.println("FileRWTest object created");
     }
 
     @BeforeAll
