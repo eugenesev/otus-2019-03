@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class FileRW {
 
     private final String fName;
-    FileRW(String fName){
+    public FileRW(String fName){
         this.fName=fName;
         System.out.println("FileRW object created: " + fName);
     }

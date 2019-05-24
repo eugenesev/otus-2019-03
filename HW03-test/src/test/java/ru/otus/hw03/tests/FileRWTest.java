@@ -1,4 +1,7 @@
-package ru.otus.hw03;
+package ru.otus.hw03.tests;
+
+import ru.otus.hw03.FileRW;
+import ru.otus.hw03.annotations.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,19 +11,25 @@ public class FileRWTest {
 
     private static FileRW fileRW;
 
-    FileRWTest() {
+    public FileRWTest() {
         System.out.println("FileRWTest object created");
     }
 
     @BeforeAll
     public static void beforeAll() {
         //throw new UnsupportedOperationException();
-        System.out.println("---------------Test before all tests---------------");
+        System.out.println("---Test 1 before all tests---");
+    }
+
+    @BeforeAll
+    public static void beforeAll2() {
+        //throw new UnsupportedOperationException();
+        System.out.println("---Test 2 before all tests---");
     }
 
     @Before
     public void beforeFileRWTest() throws IOException {
-        System.out.println("------BeforeEachTest------");
+        System.out.println("---BeforeEachTest---");
         List<Integer> numbers = new ArrayList<>(3);
         numbers.add(2);
         numbers.add(5);
@@ -30,29 +39,29 @@ public class FileRWTest {
     }
 
     @After
-    void afterFileRWTest() {
-        System.out.println("------AfterEachTest------");
+    public void afterFileRWTest() {
+        System.out.println("---AfterEachTest---");
         fileRW.dispose();
     }
 
     @AfterAll
     public static void afterAll() {
-        System.out.println("---------------Test 1 after all tests---------------");
+        System.out.println("---Test 1 after all tests---");
     }
 
     @AfterAll
     public static void afterAll2() {
-        System.out.println("---------------Test 2 after all tests---------------");
+        System.out.println("---Test 2 after all tests---");
     }
 
     @Test
-    void methodTest() {
+    public void methodTest() {
         System.out.println("Test 1");
 
     }
 
     @Test
-    void methodTest2() throws IOException {
+    public void methodTest2() throws IOException {
         System.out.println("Test 2");
         fileRW.read();
     }
