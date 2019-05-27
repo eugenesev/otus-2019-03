@@ -1,34 +1,24 @@
 package ru.otus.hw03.helpers;
 
-import ru.otus.hw03.resources.TestingContext;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public final class ReflectionHelper {
 
-    private static int testsCount;
-    private static TestingContext testContext;
-
-    private ReflectionHelper(){
+    private ReflectionHelper() {
     }
 
-    public static void useReflectionHelper(TestingContext testingContext) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        testContext = testingContext;
-        testsCount = testContext.getTestMethods().length;
-    }
-
-    public static Object getTestObject() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor<?>[] constructors = testContext.getTestClass().getDeclaredConstructors();
+    public static Object getClassInstance(Class clazz) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor<?>[] constructors = clazz.getDeclaredConstructors();
         Constructor constructor = constructors[0];
         return constructor.newInstance();
     }
 
-    public static boolean runBeforeAll() {
+    public static boolean runStaticMethods(List<Method> methods) {
         boolean status = false;
-        for (Method method : testContext.getBeforeAllMethods()) {
-            System.out.println("-----Before All Tests-----");
+        for (Method method : methods) {
             try {
                 method.invoke(null);
                 status = true;
@@ -40,37 +30,20 @@ public final class ReflectionHelper {
         return status;
     }
 
-    public static boolean runAfterAll() {
+    public static boolean runMethod(Method method, Object testObject) {
         boolean status = false;
-        for (Method method : testContext.getAfterAllMethods()) {
-            System.out.println("-----After All Tests-----");
-            try {
-                method.invoke(null);
-                status = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                status = false;
-            }
-        }
-        return status;
-    }
-
-    public static boolean runTest(int i, Object testObject) {
-        boolean status = false;
-        Method[] methods = testContext.getTestMethods();
         try {
-            methods[i].invoke(testObject);
+            method.invoke(testObject);
             status = true;
         } catch (Exception e) {
             e.printStackTrace();
-            status = false;
         }
         return status;
     }
 
-    public static boolean runBefore(Object testObject) {
+    public static boolean runMethods(List<Method> methods, Object testObject) {
         boolean status = false;
-        for (Method method : testContext.getBeforeMethods()) {
+        for (Method method : methods) {
             try {
                 method.invoke(testObject);
                 status = true;
@@ -80,23 +53,5 @@ public final class ReflectionHelper {
             }
         }
         return status;
-    }
-
-    public static boolean runAfter(Object testObject) {
-        boolean status = false;
-        for (Method method : testContext.getAfterMethods()) {
-            try {
-                method.invoke(testObject);
-                status = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                status = false;
-            }
-        }
-        return status;
-    }
-
-    public static int getTestsCount() {
-        return testsCount;
     }
 }

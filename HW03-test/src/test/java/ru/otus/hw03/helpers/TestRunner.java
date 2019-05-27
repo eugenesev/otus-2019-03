@@ -12,18 +12,17 @@ public class TestRunner {
 
         System.out.println("---------------Testing " + testClass.toString() + "---------------");
 
-        useReflectionHelper(new TestingContext(testClass));
+        TestingContext testingContext = new TestingContext(testClass);
 
-        if (runBeforeAll()) {
-            System.out.println(getTestsCount());
-            for (int i = 0; i < getTestsCount(); i++) {
-                Object testObj = getTestObject();
-                if (runBefore(testObj)) {
-                    runTest(i, testObj);
+        if (runStaticMethods(testingContext.getBeforeAllMethods())) {
+            for (int i = 0; i < testingContext.getTestMethods().size(); i++) {
+                Object testObj = getClassInstance(testClass);
+                if (runMethods(testingContext.getBeforeMethods(),testObj)) {
+                    runMethod(testingContext.getTestMethods().get(i), testObj);
                 }
-               runAfter(testObj);
+               runMethods(testingContext.getAfterMethods(),testObj);
             }
         }
-        runAfterAll();
+        runStaticMethods(testingContext.getAfterAllMethods());
     }
 }

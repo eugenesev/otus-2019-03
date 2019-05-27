@@ -10,11 +10,11 @@ import java.util.List;
 public class TestingContext {
 
     private Class testClass;
-    private Method[] beforeAllMethods;
-    private Method[] afterAllMethods;
-    private Method[] beforeMethods;
-    private Method[] afterMethods;
-    private Method[] testMethods;
+    private List<Method> beforeAllMethods;
+    private List<Method> afterAllMethods;
+    private List<Method> beforeMethods;
+    private List<Method> afterMethods;
+    private List<Method> testMethods;
 
     public TestingContext(Class<?> classTest) {
         this.testClass = classTest;
@@ -29,39 +29,34 @@ public class TestingContext {
         testMethods = getAnnotatedMethods(Test.class);
     }
 
-    public Class getTestClass() {
-        return testClass;
-    }
-
-    public Method[] getBeforeAllMethods() {
+    public List<Method> getBeforeAllMethods() {
         return beforeAllMethods;
     }
 
-    public Method[] getAfterAllMethods() {
+    public List<Method> getAfterAllMethods() {
         return afterAllMethods;
     }
 
-    public Method[] getBeforeMethods() {
+    public List<Method> getBeforeMethods() {
         return beforeMethods;
     }
 
-    public Method[] getAfterMethods() {
+    public List<Method> getAfterMethods() {
         return afterMethods;
     }
 
-    public Method[] getTestMethods() {
+    public List<Method> getTestMethods() {
         return testMethods;
     }
 
-    private Method[] getAnnotatedMethods(Class<? extends Annotation> annotation) {
-        List<Method> annotated = new ArrayList<>();
-        Method[] annotatedMethods = new Method[0];
+    private List<Method> getAnnotatedMethods(Class<? extends Annotation> annotation) {
+        List<Method> annotatedMethods = new ArrayList<>();
         Method[] declaredMethods = testClass.getDeclaredMethods();
         for (Method method : declaredMethods) {
             if (method.isAnnotationPresent(annotation))
-                annotated.add(method);
+                annotatedMethods.add(method);
         }
-        return annotated.toArray(annotatedMethods);
+        return annotatedMethods;
     }
 }
 
