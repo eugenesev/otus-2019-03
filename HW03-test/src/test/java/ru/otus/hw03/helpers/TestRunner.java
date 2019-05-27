@@ -1,5 +1,8 @@
 package ru.otus.hw03.helpers;
 
+import ru.otus.hw03.resources.TestingContext;
+
+import static ru.otus.hw03.helpers.ReflectionHelper.*;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -9,18 +12,18 @@ public class TestRunner {
 
         System.out.println("---------------Testing " + testClass.toString() + "---------------");
 
-        ReflectionHelper helper = new ReflectionHelper(testClass);
+        useReflectionHelper(new TestingContext(testClass));
 
-        if (helper.runBeforeAll()) {
-            System.out.println(helper.getTestsCount());
-            for (int i = 0; i < helper.getTestsCount(); i++) {
-                Object testObj = helper.getTestObject();
-                if (helper.runBefore(testObj)) {
-                    helper.runTest(i, testObj);
+        if (runBeforeAll()) {
+            System.out.println(getTestsCount());
+            for (int i = 0; i < getTestsCount(); i++) {
+                Object testObj = getTestObject();
+                if (runBefore(testObj)) {
+                    runTest(i, testObj);
                 }
-                helper.runAfter(testObj);
+               runAfter(testObj);
             }
         }
-        helper.runAfterAll();
+        runAfterAll();
     }
 }

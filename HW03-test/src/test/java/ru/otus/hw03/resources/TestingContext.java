@@ -16,8 +16,12 @@ public class TestingContext {
     private Method[] afterMethods;
     private Method[] testMethods;
 
-    public TestingContext(Class<?> testClass) {
-        this.testClass = testClass;
+    public TestingContext(Class<?> classTest) {
+        this.testClass = classTest;
+        fillContext();
+    }
+
+    public void fillContext() {
         beforeAllMethods = getAnnotatedMethods(BeforeAll.class);
         afterAllMethods = getAnnotatedMethods(AfterAll.class);
         beforeMethods = getAnnotatedMethods(Before.class);
@@ -56,7 +60,6 @@ public class TestingContext {
         for (Method method : declaredMethods) {
             if (method.isAnnotationPresent(annotation))
                 annotated.add(method);
-            //else continue;
         }
         return annotated.toArray(annotatedMethods);
     }
