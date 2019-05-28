@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <version>2019-03-2.0-SNAPSHOT</version>
 
-    <description>Homework-01</description>
+    <description>Homeworks</description>
 
     <developers>
         <developer>
@@ -22,6 +22,7 @@
     <modules>
         <module>HW01-maven</module>
         <module>HW02-collections</module>
+        <module>HW03-test</module>
     </modules>
 
     <properties>
