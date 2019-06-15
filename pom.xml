@@ -23,6 +23,7 @@
         <module>HW01-maven</module>
         <module>HW02-collections</module>
         <module>HW03-test</module>
+        <module>HW04-logging</module>
     </modules>
 
     <properties>
