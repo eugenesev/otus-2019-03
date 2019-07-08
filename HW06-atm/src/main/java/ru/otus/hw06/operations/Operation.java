@@ -8,4 +8,6 @@ public interface Operation {
 
     void execute(ATM atm) throws IOException;
 
+    void printCheck();
+
 }

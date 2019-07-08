@@ -1,55 +1,85 @@
 package ru.otus.hw06.atm;
 
+import ru.otus.hw06.atm_department.Chain;
 import ru.otus.hw06.cash_bundle.ATMCashBox;
-import ru.otus.hw06.operations.Operations;
+import ru.otus.hw06.cash_bundle.ATMCashBoxCaretaker;
+import ru.otus.hw06.cash_bundle.ConsumerCashBundle;
+import ru.otus.hw06.operations.*;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
-public class ATM {
+public class ATM extends Chain {
+    private int id;
 
-    public ATMCashBox atmCashBox;
+    private ATMCashBox atmCashBox;
+    private ConsumerCashBundle consumerCashBundle;
+    private Operation operation;
+    private ATMCashBoxCaretaker caretaker;
 
-    public void run() throws IOException {
-        System.out.println("ATM - " + this);
-        atmCashBox = ATMCashBox.set()
-                .fiveThousand(9)
-                .twoThousand(10)
-                .oneThousand(20)
-                .fiveHundred(1)
-                .twoHundred(0)
-                .oneHundred(100)
-                .fifty(100)
-                .build();
+    public ATM(int id, ATMCashBox atmCashBox) {
+        this.id = id;
+        this.atmCashBox = atmCashBox;
+        caretaker = new ATMCashBoxCaretaker();
+        caretaker.setMemento(this.atmCashBox.saveState());
     }
 
-//    public  void choiceOperation() throws IOException {
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-//        System.out.println("Choose operation:\n" +
-//                "1 - deposit\n" +
-//                "2 - withdraw\n" +
-//                "3 - balance\n" +
-//                "4 - exit");
-//        int choice = Integer.parseInt(reader.readLine());
-//
-//
-//        choiceOperation(choice);
-//    }
+    public int getId() {
+        return id;
+    }
 
-    public  void choiceOperation(Operations operation) throws IOException {
+    public ATMCashBox getAtmCashBox() {
+        return atmCashBox;
+    }
 
-        switch (operation) {
+    public void setAtmCashBox(ATMCashBox atmCashBox){
+        this.atmCashBox = atmCashBox;
+    }
+
+    public ConsumerCashBundle getConsumerCashBundle() {
+        return consumerCashBundle;
+    }
+
+    public void putConsumerCashBundle(ConsumerCashBundle consumerCashBundle) {
+        this.consumerCashBundle = consumerCashBundle;
+    }
+
+    public void printCheck() {
+        operation.printCheck();
+    }
+
+    public void choiceOperation(OperationEnum operationEnum) throws IOException {
+
+        switch (operationEnum) {
             case DEPOSIT:
-                Operations.DEPOSIT.execute(this);
+                operation = new Deposit();
                 break;
             case WITHDRAW:
-                Operations.WITHDRAW.execute(this);
+                operation = new Withdraw();
                 break;
             case BALANCE:
-                Operations.BALANCE.execute(this);
+                operation = new Balance();
                 break;
+            default:
         }
+        operation.execute(this);
     }
 
+    @Override
+    public String toString() {
+        return "ATM #" + id;
+    }
+
+    @Override
+    public boolean getATMBalance() {
+        int atmBalance = atmCashBox.getBalance();
+        System.out.println(this + " " + atmBalance);
+        return checkNext();
+    }
+
+    @Override
+    public boolean restore() {
+        System.out.println(this + " restored");
+        atmCashBox.restoreState(caretaker.getMemento());
+        return restoreNext();
+    }
 }
