@@ -1,6 +1,6 @@
 package ru.otus.hw06.atm;
 
-import ru.otus.hw06.atm_department.Chain;
+import ru.otus.hw06.atm_department.Department;
 import ru.otus.hw06.cash_bundle.ATMCashBox;
 import ru.otus.hw06.cash_bundle.ATMCashBoxCaretaker;
 import ru.otus.hw06.cash_bundle.ConsumerCashBundle;
@@ -8,7 +8,7 @@ import ru.otus.hw06.operations.*;
 
 import java.io.IOException;
 
-public class ATM extends Chain {
+public class ATM extends ATMChain {
     private int id;
 
     private ATMCashBox atmCashBox;
@@ -70,16 +70,17 @@ public class ATM extends Chain {
     }
 
     @Override
-    public boolean getATMBalance() {
+    public void sendATMBalance() {
         int atmBalance = atmCashBox.getBalance();
         System.out.println(this + " " + atmBalance);
-        return checkNext();
+        Department.sumBalances(atmBalance);
+        checkNext();
     }
 
     @Override
-    public boolean restore() {
+    public void restore() {
         System.out.println(this + " restored");
         atmCashBox.restoreState(caretaker.getMemento());
-        return restoreNext();
+        restoreNext();
     }
 }

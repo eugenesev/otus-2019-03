@@ -39,8 +39,6 @@ public class ATMRunner {
 //        atm.printCheck();
         atm.choiceOperation(OperationEnum.BALANCE);
         atm.printCheck();
-        atm.choiceOperation(OperationEnum.BALANCE);
-        atm.printCheck();
     }
 
 }

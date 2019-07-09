@@ -4,7 +4,15 @@ import ru.otus.hw06.atm.ATM;
 import ru.otus.hw06.cash_bundle.ATMCashBox;
 
 public class Department {
-    private static DepartmentContext departmentContext;
+
+    private static int overallBalance;
+
+    public static void sumBalances (int balance) {
+        overallBalance+=balance;
+    }
+    public static void print(){
+        System.out.println("Overall balance: " + overallBalance);
+    }
 
     public static void main(String[] args) {
         ATMCashBox atmCashBox_1 = ATMCashBox.set()
@@ -35,21 +43,17 @@ public class Department {
                 .fifty(0)
                 .build();
 
-        departmentContext = new DepartmentContext();
 
-        Chain chain = new ATM(1,atmCashBox_1)
-                .linkWith(new ATM(2,atmCashBox_2))
-                .linkWith(new ATM(3,atmCashBox_3));
+        ATM atm1 = new ATM(1, atmCashBox_1);
+        ATM atm2 = new ATM(2, atmCashBox_2);
+        ATM atm3 = new ATM(3, atmCashBox_3);
 
-        departmentContext.setChain(chain);
+                atm1.linkWith(atm2).linkWith(atm3);
+                atm1.sendATMBalance();
+                Department.print();
+                atm1.restore();
 
 
-
-        boolean success;
-
-        do {
-            success = departmentContext.getATMBalance();
-        } while (!success);
 
     }
 }
