@@ -29,7 +29,7 @@ public class Withdraw implements Operation {
                 atm.choiceOperation(new Withdraw());
             }
         } else {
-            System.out.println("There is not enough money in the ATMImpl");
+            System.out.println("There is not enough money in the ATM");
         }
         this.atm = atm;
         consumerCashBundle = atm.getConsumerCashBundle().getCashBox();

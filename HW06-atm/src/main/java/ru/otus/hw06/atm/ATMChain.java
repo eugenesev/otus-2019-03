@@ -1,6 +1,6 @@
 package ru.otus.hw06.atm;
 
-import ru.otus.hw06.atm_department.Department;
+import ru.otus.hw06.department.Department;
 
 public interface ATMChain {
 

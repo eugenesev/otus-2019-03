@@ -1,8 +1,8 @@
-package ru.otus.hw06.atm_department;
+package ru.otus.hw06.department;
 
 import ru.otus.hw06.atm.ATM;
 import ru.otus.hw06.atm.ATMImpl;
-import ru.otus.hw06.cash_bundle.ATMCashBox;
+import ru.otus.hw06.money.ATMCashBox;
 
 public class Department implements ATMDepartment {
 

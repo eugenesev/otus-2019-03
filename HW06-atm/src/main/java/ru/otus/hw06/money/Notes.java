@@ -1,4 +1,4 @@
-package ru.otus.hw06.cash_bundle;
+package ru.otus.hw06.money;
 
 public enum Notes {
     FIVE_Thousand(5000),

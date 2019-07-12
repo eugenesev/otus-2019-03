@@ -28,6 +28,6 @@ public class Deposit implements Operation {
             System.out.println(atm);
             System.out.println("Cash deposit " + consumerBalance + " was successful!");
             System.out.println(consumerCashBundle);
-            System.out.println("ATMImpl balance\n" + atmBalance);
+            System.out.println("ATM balance\n" + atmBalance);
     }
 }
