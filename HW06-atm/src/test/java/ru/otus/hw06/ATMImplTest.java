@@ -3,17 +3,19 @@ package ru.otus.hw06;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.otus.hw06.atm.ATM;
+import ru.otus.hw06.atm.ATMImpl;
 import ru.otus.hw06.cash_bundle.ATMCashBox;
 import ru.otus.hw06.cash_bundle.ConsumerCashBundle;
-import ru.otus.hw06.operations.OperationEnum;
+import ru.otus.hw06.operations.Balance;
+import ru.otus.hw06.operations.Deposit;
+import ru.otus.hw06.operations.Withdraw;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ATMTest {
-    private ATM atm;
+public class ATMImplTest {
+    private ATMImpl atmImpl;
 
     @BeforeEach
     public void beforeATMTest() throws IOException {
@@ -28,14 +30,14 @@ public class ATMTest {
                 .fifty(1)
                 .build();
 
-        ATM atm = new ATM(1, atmCashBox);
-        this.atm = atm;
+        ATMImpl atmImpl = new ATMImpl(1, atmCashBox);
+        this.atmImpl = atmImpl;
     }
 
     @AfterEach
     public void afterATMTest() throws IOException {
         System.out.println("Get balance");
-        atm.choiceOperation(OperationEnum.BALANCE);
+        atmImpl.choiceOperation(new Balance());
     }
 
     @Test
@@ -47,15 +49,15 @@ public class ATMTest {
                 .oneHundred(3)
                 .fifty(2)
                 .build();
-        atm.putConsumerCashBundle(consumerCashBundle);
-        atm.choiceOperation(OperationEnum.DEPOSIT);
-        assertEquals(93950, atm.getAtmCashBox().getBalance());
+        atmImpl.putConsumerCashBundle(consumerCashBundle);
+        atmImpl.choiceOperation(new Deposit());
+        assertEquals(93950, atmImpl.getAtmCashBox().getBalance());
     }
 
     @Test
     public void withdraw() throws InterruptedException, IOException {
-        atm.choiceOperation(OperationEnum.WITHDRAW);
-        assertEquals(93950, atm.getAtmCashBox().getBalance());
+        atmImpl.choiceOperation(new Withdraw());
+        assertEquals(93950, atmImpl.getAtmCashBox().getBalance());
     }
 
 }

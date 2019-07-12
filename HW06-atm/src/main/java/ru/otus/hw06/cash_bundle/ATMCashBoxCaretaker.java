@@ -1,6 +1,7 @@
 package ru.otus.hw06.cash_bundle;
 
 public class ATMCashBoxCaretaker {
+
     private Memento memento;
 
     public Memento getMemento() {

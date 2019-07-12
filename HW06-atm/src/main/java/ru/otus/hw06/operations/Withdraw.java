@@ -11,7 +11,7 @@ public class Withdraw implements Operation {
 
     private int consumerBalance;
     private List<Integer> consumerCashBundle;
-    private int atmId;
+    private ATM atm;
 
     @Override
     public void execute(ATM atm) throws IOException {
@@ -26,19 +26,19 @@ public class Withdraw implements Operation {
                 atm.putConsumerCashBundle(atm.getAtmCashBox().getConsumerCashBundle());
             } else {
                 System.out.println("Value must be a multiple of 50");
-                atm.choiceOperation(OperationEnum.WITHDRAW);
+                atm.choiceOperation(new Withdraw());
             }
         } else {
-            System.out.println("There is not enough money in the ATM");
+            System.out.println("There is not enough money in the ATMImpl");
         }
-        atmId = atm.getId();
+        this.atm = atm;
         consumerCashBundle = atm.getConsumerCashBundle().getCashBox();
         consumerBalance = atm.getConsumerCashBundle().getBalance();
     }
 
     @Override
     public void printCheck() {
-        System.out.println("ATM #" + atmId);
+        System.out.println(atm);
         System.out.println("Received money: \n" + consumerCashBundle);
         System.out.println("Withdraw " + consumerBalance + " RUB");
     }

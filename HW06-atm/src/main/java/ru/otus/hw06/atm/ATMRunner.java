@@ -3,7 +3,8 @@ package ru.otus.hw06.atm;
 
 import ru.otus.hw06.cash_bundle.ATMCashBox;
 import ru.otus.hw06.cash_bundle.ConsumerCashBundle;
-import ru.otus.hw06.operations.OperationEnum;
+import ru.otus.hw06.operations.Balance;
+import ru.otus.hw06.operations.Deposit;
 
 import java.io.IOException;
 
@@ -20,7 +21,7 @@ public class ATMRunner {
                 .oneHundred(0)
                 .fifty(0)
                 .build();
-        ATM atm = new ATM(1,atmCashBox);
+        ATMImpl atmImpl = new ATMImpl(1,atmCashBox);
 
         ConsumerCashBundle consumerCashBundle = ConsumerCashBundle.set()
                 .fiveThousand(1)
@@ -29,16 +30,12 @@ public class ATMRunner {
                 .oneHundred(3)
                 .fifty(2)
                 .build();
-        atm.putConsumerCashBundle(consumerCashBundle);
+        atmImpl.putConsumerCashBundle(consumerCashBundle);
 
-        atm.choiceOperation(OperationEnum.BALANCE);
-        atm.printCheck();
-        atm.choiceOperation(OperationEnum.DEPOSIT);
-        atm.printCheck();
-//        atm.choiceOperation(OperationEnum.WITHDRAW);
-//        atm.printCheck();
-        atm.choiceOperation(OperationEnum.BALANCE);
-        atm.printCheck();
+        atmImpl.choiceOperation(new Balance());
+        atmImpl.choiceOperation(new Deposit());
+//        atmImpl.choiceOperation(new Withdraw());
+        atmImpl.choiceOperation(new Balance());
     }
 
 }

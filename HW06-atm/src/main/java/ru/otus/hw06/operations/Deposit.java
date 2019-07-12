@@ -9,14 +9,14 @@ public class Deposit implements Operation {
 
     private int consumerBalance;
     private int atmBalance;
-    private int atmId;
+    private ATM atm;
     private List<Integer> consumerCashBundle;
 
     @Override
     public void execute(ATM atm) throws IOException {
         System.out.println("Depositing cash");
         atm.setAtmCashBox(atm.getAtmCashBox().debit(atm.getConsumerCashBundle()));
-        atmId = atm.getId();
+        this.atm = atm;
         consumerBalance = atm.getConsumerCashBundle().getBalance();
         consumerCashBundle = atm.getConsumerCashBundle().getCashBox();
         atmBalance = atm.getAtmCashBox().getBalance();
@@ -25,9 +25,9 @@ public class Deposit implements Operation {
 
     @Override
     public void printCheck() {
-            System.out.println("ATM #" + atmId);
+            System.out.println(atm);
             System.out.println("Cash deposit " + consumerBalance + " was successful!");
             System.out.println(consumerCashBundle);
-            System.out.println("ATM balance\n" + atmBalance);
+            System.out.println("ATMImpl balance\n" + atmBalance);
     }
 }

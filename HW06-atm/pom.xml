@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>HW06-atm</artifactId>
+    <artifactId>HW06-atmImpl</artifactId>
 
     <dependencies>
         <dependency>

@@ -1,27 +1,13 @@
 package ru.otus.hw06.atm;
 
-public abstract class ATMChain {
-    private ATMChain next;
+import ru.otus.hw06.atm_department.Department;
 
-    public ATMChain linkWith(ATMChain next) {
-        this.next = next;
-        return this.next;
-    }
+public interface ATMChain {
 
-    public abstract void sendATMBalance();
+    void linkWith(ATM nextATM);
 
-    public abstract void restore();
+    void sendATMBalance(Department department);
 
-    protected void restoreNext () {
-        if (next != null) {
-            next.restore();
-        }
-    }
-
-    protected void checkNext() {
-        if (next != null) {
-            next.sendATMBalance();
-        }
-    }
+    void restore();
 
 }

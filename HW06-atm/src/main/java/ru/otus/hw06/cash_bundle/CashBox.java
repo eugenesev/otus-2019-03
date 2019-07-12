@@ -89,14 +89,6 @@ public class CashBox {
                 + fifty * Notes.FIFTY.getNum();
     }
 
-    public int calculateBalanceFrom(Notes note) {
-        int balanceFrom = 0;
-        for (int i = note.ordinal(); i <= cashBox.size() - 1; i++) {
-            balanceFrom += cashBox.get(i) * Notes.values()[i].getNum();
-        }
-        return balanceFrom;
-    }
-
     @Override
     public String toString() {
         return "fiveThousand=" + fiveThousand +
