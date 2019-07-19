@@ -1,6 +1,5 @@
 package ru.otus.hw06.atm;
 
-import ru.otus.hw06.department.Department;
 import ru.otus.hw06.money.ATMCashBox;
 import ru.otus.hw06.money.ATMCashBoxCaretaker;
 import ru.otus.hw06.money.ConsumerCashBundle;
@@ -11,6 +10,7 @@ import java.io.IOException;
 public class ATMImpl implements ATM {
 
     private ATM nextATM;
+    private int counter;
     private int id;
     private ATMCashBox atmCashBox;
     private ConsumerCashBundle consumerCashBundle;
@@ -65,30 +65,37 @@ public class ATMImpl implements ATM {
     }
 
     @Override
-    public void sendATMBalance(Department department) {
-        int atmBalance = this.getAtmCashBox().getBalance();
-        System.out.println(this + " " + atmBalance);
-        department.sumBalances(atmBalance);
-        checkNext(department);
+    public int getBalance() {
+        int balance = this.getAtmCashBox().getBalance();
+        System.out.println(this + " " + balance);
+        return balance;
+
     }
 
     @Override
-    public void restore() {
+    public int restore() {
         System.out.println(this + " restored");
-        atmCashBox.restoreState(caretaker.getMemento());
-        restoreNext();
+        this.getAtmCashBox().restoreState(caretaker.getMemento());
+        counter = restoreNext() + 1;
+        return counter;
     }
 
-    private void checkNext(Department department) {
+    @Override
+    public ATM getNextATM() {
+        return nextATM;
+    }
+
+    private void checkNext() {
         if (nextATM != null) {
-            nextATM.sendATMBalance(department);
+            nextATM.getBalance();
         }
     }
 
-    private void restoreNext() {
+    private int restoreNext() {
         if (nextATM != null) {
-            nextATM.restore();
+            return nextATM.restore();
         }
+        return 0;
     }
 
 }

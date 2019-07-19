@@ -1,11 +1,13 @@
 package ru.otus.hw06.department;
 
-public interface ATMDepartment{
+import ru.otus.hw06.atm.ATM;
 
-    void init();
+public interface ATMDepartment {
 
-    void restoreATMChain();
+    void init(ATM atm);
 
-    void getATMChainBalance();
+    void restoreATM();
+
+    long getATMBalance();
 
 }

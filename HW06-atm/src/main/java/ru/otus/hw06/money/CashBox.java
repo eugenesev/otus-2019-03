@@ -1,103 +1,72 @@
 package ru.otus.hw06.money;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CashBox {
 
-    private int fiveThousand;
-    private int twoThousand;
-    private int oneThousand;
-    private int fiveHundred;
-    private int twoHundred;
-    private int oneHundred;
-    private int fifty;
-
-    private List<Integer> cashBox = new ArrayList<>();
+    private Map <Notes, Integer> cash = new HashMap<>();
     private int balance;
 
     protected CashBox() {
-    }
-
-    public static Builder set() {
-        return new CashBox().new Builder();
     }
 
     public int getBalance() {
         return balance;
     }
 
-    public List<Integer> getCashBox() {
-        return cashBox;
+    public Map <Notes, Integer> getCashBox() {
+        return cash;
     }
 
     public void setFiveThousand(int fiveThousand) {
-        this.fiveThousand = fiveThousand;
+
+        cash.put(Notes.FIVE_Thousand, fiveThousand);
     }
 
     public void setTwoThousand(int twoThousand) {
-        this.twoThousand = twoThousand;
+
+        cash.put(Notes.TWO_Thousand, twoThousand);
     }
 
     public void setOneThousand(int oneThousand) {
-        this.oneThousand = oneThousand;
+
+        cash.put(Notes.ONE_Thousand, oneThousand);
     }
 
     public void setFiveHundred(int fiveHundred) {
-        this.fiveHundred = fiveHundred;
+
+        cash.put(Notes.FIVE_Hundred, fiveHundred);
     }
 
     public void setTwoHundred(int twoHundred) {
-        this.twoHundred = twoHundred;
+
+        cash.put(Notes.TWO_Hundred, twoHundred);
     }
 
     public void setOneHundred(int oneHundred) {
-        this.oneHundred = oneHundred;
+
+        cash.put(Notes.ONE_Hundred, oneHundred);
     }
 
     public void setFifty(int fifty) {
-        this.fifty = fifty;
-    }
-
-    public void cashBoxLoad() {
-        cashBox.add(fiveThousand);
-        cashBox.add(twoThousand);
-        cashBox.add(oneThousand);
-        cashBox.add(fiveHundred);
-        cashBox.add(twoHundred);
-        cashBox.add(oneHundred);
-        cashBox.add(fifty);
-    }
-
-    public void cashBoxPush() {
-        fiveThousand = cashBox.get(0);
-        twoThousand = cashBox.get(1);
-        oneThousand = cashBox.get(2);
-        fiveHundred = cashBox.get(3);
-        twoHundred = cashBox.get(4);
-        oneHundred = cashBox.get(5);
-        fifty = cashBox.get(6);
+        cash.put(Notes.FIFTY, fifty);
     }
 
     public void calculateBalance() {
-        balance = fiveThousand * Notes.FIVE_Thousand.getNum()
-                + twoThousand * Notes.TWO_Thousand.getNum()
-                + oneThousand * Notes.ONE_Thousand.getNum()
-                + fiveHundred * Notes.FIVE_Hundred.getNum()
-                + twoHundred * Notes.TWO_Hundred.getNum()
-                + oneHundred * Notes.ONE_Hundred.getNum()
-                + fifty * Notes.FIFTY.getNum();
+        balance = 0;
+        cash.forEach((k, v) -> balance += k.getNum()*v);
     }
 
     @Override
     public String toString() {
-        return "fiveThousand=" + fiveThousand +
-                ", twoThousand=" + twoThousand +
-                ", oneThousand=" + oneThousand +
-                ", fiveHundred=" + fiveHundred +
-                ", twoHundred=" + twoHundred +
-                ", oneHundred=" + oneHundred +
-                ", fifty=" + fifty;
+        return "fiveThousand=" + cash.get(Notes.FIVE_Thousand) +
+                ", twoThousand=" + cash.get(Notes.TWO_Thousand) +
+                ", oneThousand=" + cash.get(Notes.ONE_Thousand) +
+                ", fiveHundred=" + cash.get(Notes.FIVE_Hundred) +
+                ", twoHundred=" + cash.get(Notes.TWO_Hundred) +
+                ", oneHundred=" + cash.get(Notes.ONE_Hundred) +
+                ", fifty=" + cash.get(Notes.FIFTY);
     }
 
     protected class Builder<B extends Builder<?>> {
@@ -141,7 +110,6 @@ public class CashBox {
         }
 
         public CashBox build() {
-            cashBoxLoad();
             calculateBalance();
             return CashBox.this;
         }

@@ -1,6 +1,6 @@
 package ru.otus.hw06.money;
 
-import java.util.List;
+import java.util.Map;
 
 public class ATMCashBox extends CashBox {
 
@@ -29,19 +29,17 @@ public class ATMCashBox extends CashBox {
         return new Memento(getCashBox());
     }
 
-    public void restoreState(Memento memento) {
+    public boolean restoreState(Memento memento) {
         getCashBox().clear();
-        getCashBox().addAll(memento.getState());
-        cashBoxPush();
+        getCashBox().putAll(memento.getState());
         calculateBalance();
-
+        return true;
     }
 
     public class Builder extends CashBox.Builder<Builder> {
 
         @Override
         public ATMCashBox build() {
-            cashBoxLoad();
             calculateBalance();
             return ATMCashBox.this;
         }
@@ -52,68 +50,95 @@ public class ATMCashBox extends CashBox {
         }
 
         private ATMCashBox calculate(ConsumerCashBundle consumerCashBundle) {
-            for (int i = 0; i <= getCashBox().size() - 1; i++) {
-                getCashBox().set(i, (getCashBox().get(i) + consumerCashBundle.getCashBox().get(i)));
+
+            for (Map.Entry<Notes, Integer> ee : getCashBox().entrySet()) {
+                Notes key = ee.getKey();
+                ee.setValue(ee.getValue() + consumerCashBundle.getCashBox().get(key));
             }
-            cashBoxPush();
             calculateBalance();
             return ATMCashBox.this;
         }
     }
 
     private class Credit {
+
+        private Map<Notes, Integer> consumerCash;
+        private ATMCashBoxCaretaker caretaker;
+
         private Credit() {
         }
 
         private ATMCashBox calculate(int cashValue) {
 
-            ATMCashBoxCaretaker caretaker = new ATMCashBoxCaretaker();
+            caretaker = new ATMCashBoxCaretaker();
             caretaker.setMemento(ATMCashBox.this.saveState());
 
             consumerCashBundle = ConsumerCashBundle.setBox(cashValue);
 
-            List<Integer> consumerCash = consumerCashBundle.getCashBox();
+            consumerCash = consumerCashBundle.getCashBox();
 
-                for (int i = 0; i <= getCashBox().size() - 1; i++) {
-                    int notes = getCashBox().get(i) - consumerCash.get(i);
-                    if (notes < 0) {
-                        notes = -notes;
-                        getCashBox().set(i, (0));
-                        consumerCash.set(i, consumerCash.get(i) - notes);
-                        switch (i) {
-                            case 0:
-                            case 3:
-                                consumerCash.set(i + 1, (consumerCash.get(i + 1) + notes * 5 / 2));
-                                notes = (notes * 5) % 2;
-                                consumerCash.set(i + 2, consumerCash.get(i + 2) + notes);
-                                break;
-                            case 1:
-                            case 2:
-                            case 4:
-                            case 5:
-                                consumerCash.set(i + 1, (consumerCash.get(i + 1) + notes * 2));
-                                break;
-                            case 6:
-                                if (consumerCash.get(i) > getCashBox().get(i)) {
-                                    ATMCashBox.this.restoreState(caretaker.getMemento());
-                                    for (int j = 0; j <= consumerCash.size() - 1; j++){
-                                        consumerCash.set(j, 0);
-                                    }
-                                    System.out.println("Нет мелких купюр");
-                                }
-                                break;
-                        }
-                    } else {
-                        getCashBox().set(i, (notes));
-                    }
-                }
+            calculateNote(Notes.FIVE_Thousand);
+            calculateNote(Notes.TWO_Thousand);
+            calculateNote(Notes.ONE_Thousand);
+            calculateNote(Notes.FIVE_Hundred);
+            calculateNote(Notes.TWO_Hundred);
+            calculateNote(Notes.ONE_Hundred);
+            calculateNote(Notes.FIFTY);
 
-            cashBoxPush();
-            consumerCashBundle.cashBoxPush();
-            consumerCashBundle.calculateBalance();
-            calculateBalance();
-
+            if (consumerCash != null) {
+                consumerCashBundle.calculateBalance();
+                calculateBalance();
+            }
             return ATMCashBox.this;
+        }
+
+        private void calculateNote(Notes note) {
+            int notes = getCashBox().get(note) - consumerCash.get(note);
+
+            if (notes < 0) {
+                notes = -notes;
+                getCashBox().put(note, (0));
+
+                noteCase(note, notes);
+
+            } else {
+                getCashBox().put(note, notes);
+            }
+        }
+
+        private void noteCase(Notes note, int notes) {
+
+            switch (note) {
+                case FIVE_Thousand:
+                    consumerCash.put(Notes.TWO_Thousand, (consumerCash.get(Notes.TWO_Thousand) + notes * 5 / 2));
+                    notes = (notes * 5) % 2;
+                    consumerCash.put(Notes.ONE_Thousand, consumerCash.get(Notes.ONE_Thousand) + notes);
+                    break;
+                case TWO_Thousand:
+                    consumerCash.put(Notes.ONE_Thousand, (consumerCash.get(Notes.ONE_Thousand) + notes * 2));
+                    break;
+                case ONE_Thousand:
+                    consumerCash.put(Notes.FIVE_Hundred, (consumerCash.get(Notes.FIVE_Hundred) + notes * 2));
+                    break;
+                case FIVE_Hundred:
+                    consumerCash.put(Notes.TWO_Hundred, (consumerCash.get(Notes.TWO_Hundred) + notes * 5 / 2));
+                    notes = (notes * 5) % 2;
+                    consumerCash.put(Notes.ONE_Hundred, consumerCash.get(Notes.ONE_Hundred) + notes);
+                    break;
+                case TWO_Hundred:
+                    consumerCash.put(Notes.ONE_Hundred, (consumerCash.get(Notes.ONE_Hundred) + notes * 2));
+                    break;
+                case ONE_Hundred:
+                    consumerCash.put(Notes.FIFTY, (consumerCash.get(Notes.FIFTY) + notes * 2));
+                    break;
+                case FIFTY:
+                    if (consumerCash.get(note) > getCashBox().get(note)) {
+                        ATMCashBox.this.restoreState(caretaker.getMemento());
+                        consumerCash.clear();
+                        System.out.println("There is no small change in ATM!");
+                    }
+                    break;
+            }
         }
     }
 }

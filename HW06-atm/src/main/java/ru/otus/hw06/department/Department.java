@@ -6,25 +6,21 @@ import ru.otus.hw06.money.ATMCashBox;
 
 public class Department implements ATMDepartment {
 
-    private int overallBalance;
     private ATM atm;
 
-    public void sumBalances(int balance) {
-        overallBalance += balance;
+    int counter;
+
+    public int getCounter() {
+        return counter;
+    }
+
+
+    public ATM getAtm() {
+        return atm;
     }
 
     public static void main(String[] args) {
 
-        Department department = new Department();
-        department.init();
-        department.getATMChainBalance();
-        department.restoreATMChain();
-
-    }
-
-
-    @Override
-    public void init() {
         ATMCashBox atmCashBox_1 = ATMCashBox.set()
                 .fiveThousand(9)
                 .twoThousand(10)
@@ -54,17 +50,35 @@ public class Department implements ATMDepartment {
         atm1.linkWith(atm2);
         atm2.linkWith(atm3);
         atm3.linkWith(atm4);
-        this.atm = atm1;
+
+        Department department = new Department();
+        department.init(atm1);
+        department.getATMBalance();
+        department.restoreATM();
+
+    }
+
+
+    @Override
+    public void init(ATM atm) {
+        this.atm = atm;
     }
 
     @Override
-    public void restoreATMChain() {
-        atm.restore();
+    public void restoreATM() {
+
+        counter = atm.restore();
     }
 
     @Override
-    public void getATMChainBalance() {
-        atm.sendATMBalance(this);
+    public long getATMBalance() {
+        long overallBalance = 0;
+        ATM currentATM = atm;
+        while (currentATM != null) {
+            overallBalance += currentATM.getBalance();
+            currentATM = currentATM.getNextATM();
+        }
         System.out.println("Overall balance: " + overallBalance);
+        return overallBalance;
     }
 }

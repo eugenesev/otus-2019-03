@@ -1,25 +1,22 @@
 package ru.otus.hw06.operations;
 
 import ru.otus.hw06.atm.ATM;
+import ru.otus.hw06.money.Notes;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
+import java.io.*;
+import java.util.Map;
 
 public class Withdraw implements Operation {
 
     private int consumerBalance;
-    private List<Integer> consumerCashBundle;
+    private Map<Notes, Integer> consumerCashBundle;
     private ATM atm;
 
     @Override
     public void execute(ATM atm) throws IOException {
         System.out.println("Withdrawing cash");
         int atmBalance = atm.getAtmCashBox().getBalance();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Enter value");
-        int cashValue = Integer.parseInt(reader.readLine());
+        int cashValue = WithdrawValueAsker.getWithdrawValueFromUser(new WithdrawValueAsker(System.in, System.out));
         if (atmBalance - cashValue >= 0) {
             if (cashValue % 50 == 0) {
                 atm.setAtmCashBox(atm.getAtmCashBox().credit(cashValue));
@@ -42,4 +39,6 @@ public class Withdraw implements Operation {
         System.out.println("Received money: \n" + consumerCashBundle);
         System.out.println("Withdraw " + consumerBalance + " RUB");
     }
+
+
 }

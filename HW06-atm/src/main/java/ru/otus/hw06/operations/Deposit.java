@@ -1,16 +1,17 @@
 package ru.otus.hw06.operations;
 
 import ru.otus.hw06.atm.ATM;
+import ru.otus.hw06.money.Notes;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 public class Deposit implements Operation {
 
     private int consumerBalance;
     private int atmBalance;
     private ATM atm;
-    private List<Integer> consumerCashBundle;
+    private Map<Notes, Integer> consumerCashBundle;
 
     @Override
     public void execute(ATM atm) throws IOException {

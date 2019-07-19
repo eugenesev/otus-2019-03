@@ -1,16 +1,18 @@
 package ru.otus.hw06.money;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Memento {
-    private final List<Integer> state = new ArrayList<>();
+    private final Map<Notes, Integer> state = new HashMap<>();
 
-    public Memento(List<Integer> state) {
-        this.state.addAll(state);
+    public Memento(Map<Notes, Integer> state) {
+        this.state.putAll(state);
     }
 
-    public List<Integer> getState() {
+    public Map<Notes, Integer> getState() {
         return state;
     }
 }

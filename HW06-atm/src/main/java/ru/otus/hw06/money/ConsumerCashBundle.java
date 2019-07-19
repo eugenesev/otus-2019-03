@@ -37,7 +37,6 @@ public class ConsumerCashBundle extends CashBox {
 
         @Override
         public ConsumerCashBundle build() {
-            cashBoxLoad();
             calculateBalance();
             return ConsumerCashBundle.this;
         }
