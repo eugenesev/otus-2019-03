@@ -22,7 +22,9 @@
     <modules>
         <module>HW01-maven</module>
         <module>HW02-collections</module>
-        <module>HW03-test</module>
+        <module>HW06-atm</module>
+       
+
     </modules>
 
     <properties>
