@@ -24,6 +24,8 @@
         <module>HW02-collections</module>
         <module>HW03-test</module>
         <module>HW04-logging</module>
+        <module>HW06-atm</module>
+     
     </modules>
 
     <properties>
