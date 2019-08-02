@@ -13,11 +13,12 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
     private Field[] declaredField;
 
     public DBExecutorImpl(Connection connection) {
+
         this.connection = connection;
     }
 
     @Override
-    public int create(String sql, Object object) throws IllegalAccessException {
+    public <T> long create(String sql, T object) {
         objectClass = object.getClass();
         try (PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             Savepoint savePoint = this.connection.setSavepoint("savePoint");
@@ -27,12 +28,21 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
                     if (!field.isAnnotationPresent(Id.class)) {
                         if (field.getType() == String.class) {
                             field.setAccessible(true);
-                            String s = field.get(object).toString();
+                            String s = null;
+                            try {
+                                s = field.get(object).toString();
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
                             pst.setString(++idx, s);
                             field.setAccessible(false);
                         } else {
                             field.setAccessible(true);
-                            pst.setInt(++idx, field.getInt(object));
+                            try {
+                                pst.setInt(++idx, field.getInt(object));
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
                             field.setAccessible(false);
 
                         }
@@ -78,15 +88,66 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
         }
     }
 
+    public <T> int update(String sql, T object){
+        objectClass = object.getClass();
+        try (PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            Savepoint savePoint = this.connection.setSavepoint("savePoint");
+            if (primaryKeyIsPresent()) {
+                int idx = 0;
+                for (Field field : declaredField) {
+                    if (!field.isAnnotationPresent(Id.class)) {
+                        if (field.getType() == String.class) {
+                            field.setAccessible(true);
+                            String s = null;
+                            try {
+                                s = field.get(object).toString();
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                            pst.setString(++idx, s);
+                            field.setAccessible(false);
+                        } else {
+                            field.setAccessible(true);
+                            try {
+                                pst.setInt(++idx, field.getInt(object));
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                            field.setAccessible(false);
+
+                        }
+                    }
+                }
+            }
+            pst.executeUpdate();
+            this.connection.commit();
+            try (ResultSet rs = pst.getGeneratedKeys()) {
+                rs.next();
+                return rs.getInt(1);
+            } catch (SQLException ex) {
+                this.connection.rollback(savePoint);
+                ex.getMessage();
+                return -1;
+            }
+        } catch (SQLException ex) {
+            ex.getMessage();
+            return -1;
+        }
+    }
+
     @Override
-    public Optional<T> load(String sql, long id, Function<ResultSet, T> rsHandler) throws SQLException {
+    public Optional<T> load(String sql, long id, Function<ResultSet, T> rsHandler) {
+        Optional<T> response = Optional.empty();
         try (PreparedStatement pst = this.connection.prepareStatement(sql)) {
             pst.setLong(1, id);
 
             try (ResultSet rs = pst.executeQuery()) {
-                return Optional.ofNullable(rsHandler.apply(rs));
+                response =  Optional.ofNullable(rsHandler.apply(rs));
             }
+        }catch (SQLException ex) {
+            ex.getMessage();
         }
+        return response;
     }
 
     private String getPrimaryKey() {

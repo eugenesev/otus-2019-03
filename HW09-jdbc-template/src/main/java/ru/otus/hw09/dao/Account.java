@@ -7,9 +7,9 @@ public class Account {
     @Id
     private final long no;
     private final String type;
-    private final int rest;
+    private float rest;
 
-    public Account(int no, String type, int rest) {
+    public Account(long no, String type, int rest) {
         this.no = no;
         this.type = type;
         this.rest = rest;
@@ -23,8 +23,12 @@ public class Account {
         return type;
     }
 
-    public int getRest() {
+    public float getRest() {
         return rest;
+    }
+
+    public void setRest (float rest) {
+        this.rest = rest;
     }
 
     @Override

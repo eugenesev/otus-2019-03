@@ -1,11 +1,11 @@
-package ru.otus.hw09;
+package ru.otus.hw09.userService;
 
 import ru.otus.hw09.dao.User;
 
 import java.sql.SQLException;
 import java.util.Optional;
 
-public interface DBService {
-    long saveUsers(User user) throws SQLException, IllegalAccessException;
+public interface UserService {
+    long saveUsers(User user);
     Optional<User> getUser(long id);
 }

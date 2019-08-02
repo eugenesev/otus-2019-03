@@ -6,7 +6,7 @@
     <parent>
         <artifactId>otus-2019-03</artifactId>
         <groupId>com.otus</groupId>
-        <version>2019-03-1.0-SNAPSHOT</version>
+        <version>2019-03-2.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

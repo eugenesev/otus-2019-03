@@ -1,4 +1,4 @@
-package ru.otus.hw09;
+package ru.otus.hw09.userService;
 
 import ru.otus.hw09.dao.User;
 import ru.otus.hw09.executor.DBExecutorImpl;
@@ -6,19 +6,19 @@ import ru.otus.hw09.executor.DBExecutorImpl;
 import java.sql.*;
 import java.util.Optional;
 
-public class DBServiceImpl implements DBService {
+public class UserServiceImpl implements UserService {
     private static final String URL = "jdbc:h2:mem:";
     private final Connection connection;
 
-    public DBServiceImpl(Connection connection) {
+    public UserServiceImpl(Connection connection) {
         this.connection = connection;
     }
 
-    public static void main(String[] args) throws SQLException, IllegalAccessException {
+    public static void main(String[] args) throws SQLException {
         Connection connection = DriverManager.getConnection(URL);
         connection.setAutoCommit(false);
 
-        DBServiceImpl dbServiceImpl = new DBServiceImpl(connection);
+        UserServiceImpl dbServiceImpl = new UserServiceImpl(connection);
         dbServiceImpl.createTableUser();
 
         dbServiceImpl.saveUsers(new User(0, "John", 25));
@@ -26,8 +26,8 @@ public class DBServiceImpl implements DBService {
         dbServiceImpl.saveUsers(new User(0, "David", 28));
         dbServiceImpl.updateName(2, "Ben");
         dbServiceImpl.updateAge(2, 54);
-
-        dbServiceImpl.getUser(2);
+User user1 = dbServiceImpl.getUser(2).get();
+        System.out.println(user1);
     }
 
     public int createTableUser() {
@@ -40,7 +40,7 @@ public class DBServiceImpl implements DBService {
     }
 
     @Override
-    public long saveUsers(User user) throws IllegalAccessException {
+    public long saveUsers(User user) {
         DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
         return dbExecutor.create("insert into user(name, age) values (?, ?)", user);
     }
