@@ -7,7 +7,7 @@ public class User {
     @Id
     private final long id;
     private final String Name;
-    private final int Age;
+    private int Age;
 
     public User(long id, String name, int age) {
         this.id = id;
@@ -25,6 +25,10 @@ public class User {
 
     public int getAge() {
         return Age;
+    }
+
+    public void setAge(int age) {
+        Age = age;
     }
 
     @Override

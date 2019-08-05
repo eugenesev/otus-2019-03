@@ -2,33 +2,41 @@ package ru.otus.hw06.operations;
 
 import ru.otus.hw06.atm.ATM;
 import ru.otus.hw06.money.Notes;
+import ru.otus.hw09.AccountService;
+import ru.otus.hw09.dao.Account;
 
-import java.io.IOException;
+import java.sql.Connection;
 import java.util.Map;
 
 public class Deposit implements Operation {
 
-    private int consumerBalance;
-    private int atmBalance;
+    private int consumerCash;
+    private float clientBalance;
     private ATM atm;
     private Map<Notes, Integer> consumerCashBundle;
 
     @Override
-    public void execute(ATM atm) throws IOException {
+    public void execute(ATM atm) {
         System.out.println("Depositing cash");
+        Connection connection = atm.getConnection();
+        AccountService accountService = new AccountService(connection);
+        Account account = accountService.getAccount(atm.getClientCardId()).get();
         atm.setAtmCashBox(atm.getAtmCashBox().debit(atm.getConsumerCashBundle()));
+        consumerCash = atm.getConsumerCashBundle().getBalance();
+        account.setRest(account.getRest() + consumerCash);
+        accountService.updateAccount(account);
+        account = accountService.getAccount(atm.getClientCardId()).get();
+        clientBalance = account.getRest();
         this.atm = atm;
-        consumerBalance = atm.getConsumerCashBundle().getBalance();
         consumerCashBundle = atm.getConsumerCashBundle().getCashBox();
-        atmBalance = atm.getAtmCashBox().getBalance();
 
     }
 
     @Override
     public void printCheck() {
-            System.out.println(atm);
-            System.out.println("Cash deposit " + consumerBalance + " was successful!");
-            System.out.println(consumerCashBundle);
-            System.out.println("ATM balance\n" + atmBalance);
+        System.out.println(atm);
+        System.out.println("Cash deposit " + consumerCash + " was successful!");
+        System.out.println(consumerCashBundle);
+        System.out.println("Your balance\n" + clientBalance);
     }
 }

@@ -18,7 +18,7 @@ public class AccountService {
         this.connection = connection;
     }
 
-    public static void main(String[] args) throws SQLException, IllegalAccessException {
+    public static void main(String[] args) throws SQLException {
         Connection connection = DriverManager.getConnection(URL);
         connection.setAutoCommit(false);
 
@@ -26,9 +26,12 @@ public class AccountService {
 
         accountService.createTableAccount();
 
-        Account card = new Account(0, "Card", 123);
+        Account card = new Account(0, "Card", 123_000.3f);
         accountService.saveAccount(card);
-        accountService.getAccount(1);
+        card = accountService.getAccount(1).get();
+        card.setRest(100_000.3f);
+        accountService.updateAccount(card);
+        card = accountService.getAccount(1).get();
 
     }
 
@@ -41,7 +44,7 @@ public class AccountService {
         }
     }
 
-    public long saveAccount(Account account) throws IllegalAccessException {
+    public long saveAccount(Account account) {
         DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
         return dbExecutor.create("insert into account(type, rest) values (?, ?)", account);
     }
@@ -52,7 +55,7 @@ public class AccountService {
             Optional<Account> account = executor.load("select no, type, rest from account where no  = ?", no, resultSet -> {
                 try {
                     if (resultSet.next()) {
-                        return new Account(resultSet.getLong("no"), resultSet.getString("type"), resultSet.getInt("rest"));
+                        return new Account(resultSet.getLong("no"), resultSet.getString("type"), resultSet.getFloat("rest"));
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -66,14 +69,10 @@ public class AccountService {
             throw new RuntimeException(ex);
         }
     }
-    public void updateAccount(long id, float rest) {
-        DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
-        dbExecutor.update("update account set rest = ? where id = ?", id, rest);
-    }
 
     public void updateAccount(Account account) {
         DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
-        dbExecutor.update("update account set rest = ? where id = ?", account);
+        dbExecutor.update("update account set rest = ? where no = ?", account.getNo(), account.getRest());
     }
 
 }

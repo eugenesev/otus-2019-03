@@ -9,7 +9,7 @@ public class Account {
     private final String type;
     private float rest;
 
-    public Account(long no, String type, int rest) {
+    public Account(long no, String type, float rest) {
         this.no = no;
         this.type = type;
         this.rest = rest;

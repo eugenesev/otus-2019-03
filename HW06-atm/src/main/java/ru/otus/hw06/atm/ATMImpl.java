@@ -6,6 +6,7 @@ import ru.otus.hw06.money.ConsumerCashBundle;
 import ru.otus.hw06.operations.*;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 public class ATMImpl implements ATM {
 
@@ -15,6 +16,8 @@ public class ATMImpl implements ATM {
     private ATMCashBox atmCashBox;
     private ConsumerCashBundle consumerCashBundle;
     private ATMCashBoxCaretaker caretaker;
+    private long clientCardId;
+    private Connection connection;
 
     public ATMImpl(int id, ATMCashBox atmCashBox) {
         this.id = id;
@@ -49,9 +52,31 @@ public class ATMImpl implements ATM {
     }
 
     @Override
+    public void insertClientCard(long no) {
+        this.clientCardId = no;
+    }
+
+    @Override
+    public long getClientCardId() {
+        return this.clientCardId;
+    }
+    @Override
+    public Connection getConnection() {
+        return connection;
+    }
+    @Override
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    @Override
     public void choiceOperation(Operation operation) throws IOException {
-        operation.execute(this);
-        operation.printCheck();
+        if(clientCardId != 0){
+            operation.execute(this);
+            operation.printCheck();
+        }else{
+            System.out.println("Insert your card, please");
+        }
     }
 
     @Override

@@ -4,10 +4,12 @@ import ru.otus.hw06.money.ATMCashBox;
 import ru.otus.hw06.money.ATMCashBoxCaretaker;
 import ru.otus.hw06.money.ConsumerCashBundle;
 import ru.otus.hw06.operations.Operation;
+import ru.otus.hw09.dao.Account;
 
 import java.io.IOException;
+import java.sql.Connection;
 
-public interface ATM extends ATMChain{
+public interface ATM extends ATMChain {
 
     ATMCashBox getAtmCashBox();
 
@@ -16,6 +18,14 @@ public interface ATM extends ATMChain{
     ConsumerCashBundle getConsumerCashBundle();
 
     void putConsumerCashBundle(ConsumerCashBundle consumerCashBundle);
+
+    void insertClientCard(long no);
+
+    long getClientCardId();
+
+    Connection getConnection();
+
+    void setConnection(Connection connection);
 
     void choiceOperation(Operation operation) throws IOException;
 

@@ -37,14 +37,26 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
                             pst.setString(++idx, s);
                             field.setAccessible(false);
                         } else {
-                            field.setAccessible(true);
-                            try {
-                                pst.setInt(++idx, field.getInt(object));
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
+                            if (field.getType() == float.class || field.getType() ==  Float.class) {
+                                field.setAccessible(true);
+                                float l = 0;
+                                try {
+                                    l = (float) field.get(object);
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                }
+                                pst.setFloat(++idx, l);
+                                field.setAccessible(false);
                             }
-                            field.setAccessible(false);
-
+                            if (field.getType() == Integer.class || field.getType() == int.class) {
+                                field.setAccessible(true);
+                                try {
+                                    pst.setInt(++idx, (int) field.get(object));
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                }
+                                field.setAccessible(false);
+                            }
                         }
                     }
                 }
@@ -75,6 +87,9 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
             if (param.getClass() == Integer.class) {
                 pst.setInt(1, (int) param);
             }
+            if (param.getClass() == Float.class) {
+                pst.setFloat(1, (float) param);
+            }
             pst.setLong(2, id);
             try {
                 pst.executeUpdate();
@@ -88,53 +103,6 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
         }
     }
 
-    public <T> int update(String sql, T object){
-        objectClass = object.getClass();
-        try (PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            Savepoint savePoint = this.connection.setSavepoint("savePoint");
-            if (primaryKeyIsPresent()) {
-                int idx = 0;
-                for (Field field : declaredField) {
-                    if (!field.isAnnotationPresent(Id.class)) {
-                        if (field.getType() == String.class) {
-                            field.setAccessible(true);
-                            String s = null;
-                            try {
-                                s = field.get(object).toString();
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
-                            pst.setString(++idx, s);
-                            field.setAccessible(false);
-                        } else {
-                            field.setAccessible(true);
-                            try {
-                                pst.setInt(++idx, field.getInt(object));
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
-                            field.setAccessible(false);
-
-                        }
-                    }
-                }
-            }
-            pst.executeUpdate();
-            this.connection.commit();
-            try (ResultSet rs = pst.getGeneratedKeys()) {
-                rs.next();
-                return rs.getInt(1);
-            } catch (SQLException ex) {
-                this.connection.rollback(savePoint);
-                ex.getMessage();
-                return -1;
-            }
-        } catch (SQLException ex) {
-            ex.getMessage();
-            return -1;
-        }
-    }
-
     @Override
     public Optional<T> load(String sql, long id, Function<ResultSet, T> rsHandler) {
         Optional<T> response = Optional.empty();
@@ -142,9 +110,9 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
             pst.setLong(1, id);
 
             try (ResultSet rs = pst.executeQuery()) {
-                response =  Optional.ofNullable(rsHandler.apply(rs));
+                response = Optional.ofNullable(rsHandler.apply(rs));
             }
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.getMessage();
         }
         return response;

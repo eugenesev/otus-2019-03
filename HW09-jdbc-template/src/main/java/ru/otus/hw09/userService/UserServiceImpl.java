@@ -15,19 +15,24 @@ public class UserServiceImpl implements UserService {
     }
 
     public static void main(String[] args) throws SQLException {
-        Connection connection = DriverManager.getConnection(URL);
-        connection.setAutoCommit(false);
+        try (Connection connection = DriverManager.getConnection(URL)){
+            connection.setAutoCommit(false);
 
-        UserServiceImpl dbServiceImpl = new UserServiceImpl(connection);
-        dbServiceImpl.createTableUser();
+            UserServiceImpl dbServiceImpl = new UserServiceImpl(connection);
+            dbServiceImpl.createTableUser();
 
-        dbServiceImpl.saveUsers(new User(0, "John", 25));
-        dbServiceImpl.saveUsers(new User(0, "Martin", 32));
-        dbServiceImpl.saveUsers(new User(0, "David", 28));
-        dbServiceImpl.updateName(2, "Ben");
-        dbServiceImpl.updateAge(2, 54);
-User user1 = dbServiceImpl.getUser(2).get();
-        System.out.println(user1);
+            dbServiceImpl.saveUsers(new User(0, "John", 25));
+            dbServiceImpl.saveUsers(new User(0, "Martin", 32));
+            dbServiceImpl.saveUsers(new User(0, "David", 28));
+            dbServiceImpl.updateName(2, "Ben");
+            dbServiceImpl.updateAge(2, 54);
+            User user1 = dbServiceImpl.getUser(2).get();
+            System.out.println(user1);
+            user1.setAge(34);
+            dbServiceImpl.updateUser(user1);
+            User user2 = dbServiceImpl.getUser(2).get();
+            System.out.println(user2);
+        }
     }
 
     public int createTableUser() {
@@ -53,6 +58,12 @@ User user1 = dbServiceImpl.getUser(2).get();
     public void updateAge(long id, int age) {
         DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
         dbExecutor.update("update user set age = ? where id = ?", id, age);
+    }
+
+    @Override
+    public void updateUser(User user){
+        DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
+        dbExecutor.update("update user set age = ? where id = ?", user.getId(), user.getAge());
     }
 
     @Override

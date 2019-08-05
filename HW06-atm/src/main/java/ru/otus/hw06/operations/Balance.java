@@ -2,26 +2,30 @@ package ru.otus.hw06.operations;
 
 import ru.otus.hw06.atm.ATM;
 import ru.otus.hw06.money.Notes;
+import ru.otus.hw09.AccountService;
+import ru.otus.hw09.dao.Account;
 
-import java.io.IOException;
-import java.util.List;
+import java.sql.Connection;
 import java.util.Map;
 
 public class Balance implements Operation {
-    private int atmBalance;
+    private float clientBalance;
     private Map<Notes, Integer> atmCashBox;
     private ATM atm;
 
     @Override
-    public void execute(ATM atm) throws IOException {
+    public void execute(ATM atm) {
         this.atm = atm;
-        atmBalance = atm.getAtmCashBox().getBalance();
+        Connection connection = atm.getConnection();
+        AccountService accountService = new AccountService(connection);
+        Account account = accountService.getAccount(atm.getClientCardId()).get();
+        clientBalance = account.getRest();
         atmCashBox = atm.getAtmCashBox().getCashBox();
     }
 
     @Override
     public void printCheck() {
-            System.out.println(atm);
-            System.out.println("ATM balance\n" + atmBalance + "\n" + atmCashBox);
+        System.out.println(atm);
+        System.out.println("Your balance\n" + clientBalance + "\n" + "Available notes" + atmCashBox);
     }
 }
