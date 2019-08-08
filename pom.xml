@@ -25,7 +25,8 @@
         <module>HW03-test</module>
         <module>HW04-logging</module>
         <module>HW06-atm</module>
-     
+        <module>HW09-jdbc-template</module>
+
     </modules>
 
     <properties>

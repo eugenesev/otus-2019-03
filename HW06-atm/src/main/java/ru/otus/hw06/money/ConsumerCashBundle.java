@@ -23,7 +23,6 @@ public class ConsumerCashBundle extends CashBox {
                 .oneHundred(notesCount(Notes.ONE_Hundred))
                 .fifty(notesCount(Notes.FIFTY))
                 .build();
-
     }
 
     private static int notesCount(Notes note) {
