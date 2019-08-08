@@ -19,20 +19,20 @@ public class AccountService {
     }
 
     public static void main(String[] args) throws SQLException {
-        Connection connection = DriverManager.getConnection(URL);
-        connection.setAutoCommit(false);
+        try(Connection connection = DriverManager.getConnection(URL)) {
+            connection.setAutoCommit(false);
 
-        AccountService accountService = new AccountService(connection);
+            AccountService accountService = new AccountService(connection);
 
-        accountService.createTableAccount();
+            accountService.createTableAccount();
 
-        Account card = new Account(0, "Card", 123_000.3f);
-        accountService.saveAccount(card);
-        card = accountService.getAccount(1).get();
-        card.setRest(100_000.3f);
-        accountService.updateAccount(card);
-        card = accountService.getAccount(1).get();
-
+            Account card = new Account(0, "Card", 123_000.3f);
+            accountService.saveAccount(card);
+            card = accountService.getAccount(1).get();
+            card.setRest(100_000.3f);
+            accountService.updateAccount(card);
+            card = accountService.getAccount(1).get();
+        }
     }
 
     public int createTableAccount() {

@@ -18,7 +18,7 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
     }
 
     @Override
-    public <T> long create(String sql, T object) {
+    public long create(String sql, T object) {
         objectClass = object.getClass();
         try (PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             Savepoint savePoint = this.connection.setSavepoint("savePoint");
@@ -29,32 +29,20 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
                         if (field.getType() == String.class) {
                             field.setAccessible(true);
                             String s = null;
-                            try {
-                                s = field.get(object).toString();
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
+                            s = field.get(object).toString();
                             pst.setString(++idx, s);
                             field.setAccessible(false);
                         } else {
-                            if (field.getType() == float.class || field.getType() ==  Float.class) {
+                            if (field.getType() == float.class || field.getType() == Float.class) {
                                 field.setAccessible(true);
                                 float l = 0;
-                                try {
-                                    l = (float) field.get(object);
-                                } catch (IllegalAccessException e) {
-                                    e.printStackTrace();
-                                }
+                                l = (float) field.get(object);
                                 pst.setFloat(++idx, l);
                                 field.setAccessible(false);
                             }
                             if (field.getType() == Integer.class || field.getType() == int.class) {
                                 field.setAccessible(true);
-                                try {
-                                    pst.setInt(++idx, (int) field.get(object));
-                                } catch (IllegalAccessException e) {
-                                    e.printStackTrace();
-                                }
+                                pst.setInt(++idx, (int) field.get(object));
                                 field.setAccessible(false);
                             }
                         }
@@ -71,7 +59,7 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
                 ex.getMessage();
                 return -1;
             }
-        } catch (SQLException ex) {
+        } catch (SQLException | IllegalAccessException ex) {
             ex.getMessage();
             return -1;
         }

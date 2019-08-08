@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface DBExecutor <T> {
+public interface DBExecutor<T> {
 
-    <T> long create(String sql, T object) throws SQLException, IllegalAccessException;
+    long create(String sql, T object) throws SQLException, IllegalAccessException;
 
     <T> void update(String sql, long id, T param);
 
