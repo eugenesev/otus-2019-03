@@ -9,11 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hw04-logging</artifactId>
-    <name>hw04-logging</name>
-
-    <packaging>jar</packaging>
-
+    <artifactId>hw05-gc</artifactId>
 
 
 </project>

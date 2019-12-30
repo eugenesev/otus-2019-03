@@ -2,8 +2,8 @@ package ru.otus.hw06.operations;
 
 import ru.otus.hw06.atm.ATM;
 import ru.otus.hw06.money.Notes;
-import ru.otus.hw09.AccountService;
-import ru.otus.hw09.dao.Account;
+import ru.otus.hw09.jdbc.service.AccountService;
+import ru.otus.hw09.api.model.Account;
 
 import java.sql.Connection;
 import java.util.Map;

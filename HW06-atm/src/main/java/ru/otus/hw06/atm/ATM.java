@@ -4,7 +4,6 @@ import ru.otus.hw06.money.ATMCashBox;
 import ru.otus.hw06.money.ATMCashBoxCaretaker;
 import ru.otus.hw06.money.ConsumerCashBundle;
 import ru.otus.hw06.operations.Operation;
-import ru.otus.hw09.dao.Account;
 
 import java.io.IOException;
 import java.sql.Connection;

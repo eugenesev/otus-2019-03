@@ -7,8 +7,8 @@ import ru.otus.hw06.money.ConsumerCashBundle;
 import ru.otus.hw06.operations.Balance;
 import ru.otus.hw06.operations.Deposit;
 import ru.otus.hw06.operations.Withdraw;
-import ru.otus.hw09.AccountService;
-import ru.otus.hw09.dao.Account;
+import ru.otus.hw09.jdbc.service.AccountService;
+import ru.otus.hw09.api.model.Account;
 
 import java.io.IOException;
 import java.sql.Connection;
