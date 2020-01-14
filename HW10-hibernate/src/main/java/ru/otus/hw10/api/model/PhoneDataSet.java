@@ -8,17 +8,20 @@ public class PhoneDataSet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private long id;
 
-    @Column(name = "number")
+    @Column(name = "number", length = 20)
     private String number;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private User person;
 
     public PhoneDataSet() {
     }
 
-    public PhoneDataSet(long id, String number) {
-        this.id = id;
+    public PhoneDataSet(String number) {
         this.number = number;
     }
 
@@ -32,6 +35,14 @@ public class PhoneDataSet {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public User getPerson() {
+        return person;
+    }
+
+    public void setPerson(User person) {
+        this.person = person;
     }
 
     @Override

@@ -14,11 +14,14 @@ public class AddressDataSet {
     @Column(name = "street")
     private String street;
 
+    @OneToOne(mappedBy = "homeAddress",
+            cascade = CascadeType.ALL)
+    private User person;
+
     public AddressDataSet() {
     }
 
-    public AddressDataSet(long id, String street) {
-        this.id = id;
+    public AddressDataSet(String street) {
         this.street = street;
     }
 
@@ -32,6 +35,14 @@ public class AddressDataSet {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public User getPerson() {
+        return person;
+    }
+
+    public void setPerson(User person) {
+        this.person = person;
     }
 
     @Override
