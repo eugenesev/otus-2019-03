@@ -15,7 +15,7 @@ public class PhoneDataSet {
     private String number;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    @JoinColumn(name = "fk_person_id", referencedColumnName = "id")
     private User person;
 
     public PhoneDataSet() {

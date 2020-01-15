@@ -20,7 +20,8 @@ public class DbServiceDemo {
 
     public static void main(String[] args) {
 
-        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory("hibernate.cfg.xml", User.class, AddressDataSet.class, PhoneDataSet.class);
+        SessionFactory sessionFactory = HibernateUtils
+                .buildSessionFactory("hibernate.cfg.xml", User.class, AddressDataSet.class, PhoneDataSet.class);
 
         SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
         UserDao userDao = new UserDaoHibernate(sessionManager);
@@ -31,12 +32,12 @@ public class DbServiceDemo {
 //        address.setPerson(user1); //Нужен AddressDao
         user1.setHomeAddress(address);
 
-        PhoneDataSet phone = new PhoneDataSet("112-22-33");
+        PhoneDataSet phone1 = new PhoneDataSet("112-22-33");
 //        phone.setPerson(user1); //Нужен PhoneDao
-        user1.addPhone(phone);
-
-        PhoneDataSet phone1 = new PhoneDataSet("112-44-55");
         user1.addPhone(phone1);
+
+        PhoneDataSet phone2 = new PhoneDataSet("112-44-55");
+        user1.addPhone(phone2);
 
         long id = dbServiceUser.saveUser(user1);
         Optional<User> mayBeCreatedUser = dbServiceUser.getUser(id);
@@ -44,10 +45,7 @@ public class DbServiceDemo {
         user1.setHomeAddress(new AddressDataSet("Лесная"));
         id = dbServiceUser.saveUser(user1);
         Optional<User> mayBeUpdatedUser = dbServiceUser.getUser(id);
-//
-//        id = dbServiceUser.saveUser(new User(1L, "А! Нет. Это же совсем не Вася"));
-//        Optional<User> mayBeUpdatedUser = dbServiceUser.getUser(id);
-//
+
         System.out.println(user1);
         outputUserOptional("Created user", mayBeCreatedUser);
         outputUserOptional("Updated user", mayBeUpdatedUser);

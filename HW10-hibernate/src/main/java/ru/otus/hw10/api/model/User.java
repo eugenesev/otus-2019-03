@@ -14,14 +14,14 @@ public class User {
     @Column(name = "id", nullable = false)
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 50)
     private String name;
 
     @Column(name = "age")
     private int age;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "fk_address_id")
     private AddressDataSet homeAddress;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
