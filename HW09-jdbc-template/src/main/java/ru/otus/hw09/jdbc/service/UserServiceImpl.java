@@ -1,7 +1,9 @@
-package ru.otus.hw09.userService;
+package ru.otus.hw09.jdbc.service;
 
-import ru.otus.hw09.dao.User;
-import ru.otus.hw09.executor.DBExecutorImpl;
+import ru.otus.hw09.api.model.User;
+import ru.otus.hw09.api.dao.DBExecutor;
+import ru.otus.hw09.api.userService.UserService;
+import ru.otus.hw09.jdbc.dao.DBExecutorImpl;
 
 import java.sql.*;
 import java.util.Optional;
@@ -14,18 +16,16 @@ public class UserServiceImpl implements UserService {
         this.connection = connection;
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IllegalAccessException, NoSuchFieldException {
         try (Connection connection = DriverManager.getConnection(URL)){
             connection.setAutoCommit(false);
 
             UserServiceImpl dbServiceImpl = new UserServiceImpl(connection);
             dbServiceImpl.createTableUser();
 
-            dbServiceImpl.saveUsers(new User(0, "John", 25));
-            dbServiceImpl.saveUsers(new User(0, "Martin", 32));
-            dbServiceImpl.saveUsers(new User(0, "David", 28));
-            dbServiceImpl.updateName(2, "Ben");
-            dbServiceImpl.updateAge(2, 54);
+            dbServiceImpl.saveUser(new User(0, "John", 25));
+            dbServiceImpl.saveUser(new User(0, "Martin", 32));
+            dbServiceImpl.saveUser(new User(0, "David", 28));
             User user1 = dbServiceImpl.getUser(2).get();
             System.out.println(user1);
             user1.setAge(34);
@@ -45,31 +45,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long saveUsers(User user) {
-        DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
-        return dbExecutor.create("insert into user(name, age) values (?, ?)", user);
-    }
-
-    public void updateName(long id, String name) {
-        DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
-        dbExecutor.update("update user set name = ? where id = ?", id, name);
-    }
-
-    public void updateAge(long id, int age) {
-        DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
-        dbExecutor.update("update user set age = ? where id = ?", id, age);
+    public void saveUser(User user) throws SQLException, IllegalAccessException {
+        DBExecutor<User> dbExecutor = new DBExecutorImpl<>(connection);
+        dbExecutor.create(user);
     }
 
     @Override
-    public void updateUser(User user){
-        DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
-        dbExecutor.update("update user set age = ? where id = ?", user.getId(), user.getAge());
+    public void updateUser(User user) throws NoSuchFieldException, IllegalAccessException, SQLException {
+        DBExecutor<User> dbExecutor = new DBExecutorImpl<>(connection);
+        dbExecutor.update(user);
     }
 
     @Override
     public Optional<User> getUser(long id) {
         try {
-            DBExecutorImpl<User> executor = new DBExecutorImpl<>(connection);
+            DBExecutor<User> executor = new DBExecutorImpl<>(connection);
             Optional<User> user = executor.load("select id, name, age from user where id  = ?", id, resultSet -> {
                 try {
                     if (resultSet.next()) {

@@ -1,6 +1,6 @@
-package ru.otus.hw09.dao;
+package ru.otus.hw09.api.model;
 
-import ru.otus.hw09.Id;
+import ru.otus.hw09.api.dao.Id;
 
 public class User {
 

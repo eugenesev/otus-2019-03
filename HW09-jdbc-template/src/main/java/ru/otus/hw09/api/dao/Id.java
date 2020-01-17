@@ -1,4 +1,4 @@
-package ru.otus.hw09;
+package ru.otus.hw09.api.dao;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

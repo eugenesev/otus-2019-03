@@ -3,13 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <groupId>ru.otus</groupId>
         <artifactId>otus-2019-03</artifactId>
-        <groupId>com.otus</groupId>
         <version>2019-03-2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>HW06-atm</artifactId>
+    <artifactId>hw06-atm</artifactId>
+    <name>hw06-atm</name>
+
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -24,6 +27,12 @@
         </dependency>
         <dependency>
             <groupId>com.otus</groupId>
+            <artifactId>hw09-jdbc-template</artifactId>
+            <version>2019-03-2.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.otus</groupId>
             <artifactId>hw09-jdbc-template</artifactId>
             <version>2019-03-2.0-SNAPSHOT</version>
             <scope>compile</scope>
@@ -50,6 +59,7 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
         </plugins>
     </build>
 

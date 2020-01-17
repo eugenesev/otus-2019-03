@@ -1,7 +1,7 @@
-package ru.otus.hw09;
+package ru.otus.hw09.jdbc.service;
 
-import ru.otus.hw09.dao.Account;
-import ru.otus.hw09.executor.DBExecutorImpl;
+import ru.otus.hw09.api.model.Account;
+import ru.otus.hw09.jdbc.dao.DBExecutorImpl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,7 +18,7 @@ public class AccountService {
         this.connection = connection;
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, NoSuchFieldException, IllegalAccessException {
         try(Connection connection = DriverManager.getConnection(URL)) {
             connection.setAutoCommit(false);
 
@@ -44,9 +44,9 @@ public class AccountService {
         }
     }
 
-    public long saveAccount(Account account) {
+    public void saveAccount(Account account) throws SQLException {
         DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
-        return dbExecutor.create("insert into account(type, rest) values (?, ?)", account);
+        dbExecutor.create(account);
     }
 
     public Optional<Account> getAccount(long no) {
@@ -70,9 +70,9 @@ public class AccountService {
         }
     }
 
-    public void updateAccount(Account account) {
+    public void updateAccount(Account account) throws NoSuchFieldException, IllegalAccessException, SQLException {
         DBExecutorImpl dbExecutor = new DBExecutorImpl(connection);
-        dbExecutor.update("update account set rest = ? where no = ?", account.getNo(), account.getRest());
+        dbExecutor.update(account);
     }
 
 }
