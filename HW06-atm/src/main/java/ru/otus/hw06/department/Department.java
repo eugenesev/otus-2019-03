@@ -31,7 +31,7 @@ public class Department implements ATMDepartment {
         return atm;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchFieldException, IllegalAccessException {
 
         ATMCashBox atmCashBox_1 = ATMCashBox.set()
                 .fiveThousand(9)

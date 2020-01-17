@@ -7,6 +7,7 @@ import ru.otus.hw06.operations.*;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class ATMImpl implements ATM {
 
@@ -70,7 +71,7 @@ public class ATMImpl implements ATM {
     }
 
     @Override
-    public void choiceOperation(Operation operation) throws IOException {
+    public void choiceOperation(Operation operation) throws IOException, IllegalAccessException, NoSuchFieldException, SQLException {
         if(clientCardId != 0){
             operation.execute(this);
             operation.printCheck();

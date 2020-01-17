@@ -6,6 +6,7 @@ import ru.otus.hw09.jdbc.service.AccountService;
 import ru.otus.hw09.api.model.Account;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Map;
 
 public class Deposit implements Operation {
@@ -16,7 +17,7 @@ public class Deposit implements Operation {
     private Map<Notes, Integer> consumerCashBundle;
 
     @Override
-    public void execute(ATM atm) {
+    public void execute(ATM atm) throws IllegalAccessException, NoSuchFieldException, SQLException {
         System.out.println("Depositing cash");
         Connection connection = atm.getConnection();
         AccountService accountService = new AccountService(connection);

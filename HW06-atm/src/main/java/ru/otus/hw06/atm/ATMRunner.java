@@ -8,10 +8,11 @@ import ru.otus.hw06.operations.Deposit;
 import ru.otus.hw06.operations.Withdraw;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class ATMRunner {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, IllegalAccessException, NoSuchFieldException, SQLException {
 
         ATMCashBox atmCashBox = ATMCashBox.set()
                 .fiveThousand(9)

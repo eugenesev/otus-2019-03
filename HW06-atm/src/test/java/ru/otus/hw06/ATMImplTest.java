@@ -12,6 +12,7 @@ import ru.otus.hw06.operations.Withdraw;
 import ru.otus.hw06.operations.WithdrawValueAsker;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -37,13 +38,13 @@ public class ATMImplTest {
     }
 
     @AfterEach
-    public void afterATMTest() throws IOException {
+    public void afterATMTest() throws IOException, IllegalAccessException, NoSuchFieldException, SQLException {
         System.out.println("Get balance");
         atmImpl.choiceOperation(new Balance());
     }
 
     @Test
-    public void deposit() throws InterruptedException, IOException {
+    public void deposit() throws InterruptedException, IOException, IllegalAccessException, NoSuchFieldException, SQLException {
         ConsumerCashBundle consumerCashBundle = ConsumerCashBundle.set()
                 .fiveThousand(1)
                 .twoThousand(0)
@@ -59,7 +60,7 @@ public class ATMImplTest {
     }
 
     @Test
-    public void withdraw() throws InterruptedException, IOException {
+    public void withdraw() throws InterruptedException, IOException, IllegalAccessException, NoSuchFieldException, SQLException {
 
         Withdraw withdraw = mock(Withdraw.class);
         WithdrawValueAsker asker = mock(WithdrawValueAsker.class);

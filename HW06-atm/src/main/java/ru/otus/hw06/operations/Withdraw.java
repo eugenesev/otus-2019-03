@@ -7,6 +7,7 @@ import ru.otus.hw09.api.model.Account;
 
 import java.io.*;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Map;
 
 public class Withdraw implements Operation {
@@ -18,7 +19,7 @@ public class Withdraw implements Operation {
     private ATM atm;
 
     @Override
-    public void execute(ATM atm) throws IOException {
+    public void execute(ATM atm) throws IOException, IllegalAccessException, NoSuchFieldException, SQLException {
         System.out.println("Withdrawing cash");
 
         int atmBalance = atm.getAtmCashBox().getBalance();
