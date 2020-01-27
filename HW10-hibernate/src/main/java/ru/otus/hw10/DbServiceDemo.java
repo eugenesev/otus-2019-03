@@ -4,7 +4,7 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw10.api.dao.UserDao;
-import ru.otus.hw10.api.model.AddressDataSet;
+import ru.otus.hw10.api.model.HomeAddress;
 import ru.otus.hw10.api.model.PhoneDataSet;
 import ru.otus.hw10.api.model.User;
 import ru.otus.hw10.api.service.DBServiceUser;
@@ -21,14 +21,14 @@ public class DbServiceDemo {
     public static void main(String[] args) {
 
         SessionFactory sessionFactory = HibernateUtils
-                .buildSessionFactory("hibernate.cfg.xml", User.class, AddressDataSet.class, PhoneDataSet.class);
+                .buildSessionFactory("hibernate.cfg.xml", User.class, HomeAddress.class, PhoneDataSet.class);
 
         SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
         UserDao userDao = new UserDaoHibernate(sessionManager);
         DBServiceUser dbServiceUser = new DbServiceUserImpl(userDao);
 
         User user1 = new User("Вася", 25);
-        AddressDataSet address = new AddressDataSet("Садовая");
+        HomeAddress address = new HomeAddress("Садовая");
 //        address.setPerson(user1); //Нужен AddressDao
         user1.setHomeAddress(address);
 
@@ -42,13 +42,15 @@ public class DbServiceDemo {
         long id = dbServiceUser.saveUser(user1);
         Optional<User> mayBeCreatedUser = dbServiceUser.getUser(id);
 
-        user1.setHomeAddress(new AddressDataSet("Лесная"));
+        user1.setHomeAddress(new HomeAddress("Лесная"));
         id = dbServiceUser.saveUser(user1);
         Optional<User> mayBeUpdatedUser = dbServiceUser.getUser(id);
 
         System.out.println(user1);
         outputUserOptional("Created user", mayBeCreatedUser);
         outputUserOptional("Updated user", mayBeUpdatedUser);
+
+
     }
 
     private static void outputUserOptional(String header, Optional<User> mayBeUser) {

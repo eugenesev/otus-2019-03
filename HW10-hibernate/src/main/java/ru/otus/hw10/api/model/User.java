@@ -4,6 +4,7 @@ package ru.otus.hw10.api.model;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -22,7 +23,7 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_address_id")
-    private AddressDataSet homeAddress;
+    private HomeAddress homeAddress;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<PhoneDataSet> phones = new ArrayList<>();
@@ -59,11 +60,11 @@ public class User {
         this.age = age;
     }
 
-    public AddressDataSet getHomeAddress() {
+    public HomeAddress getHomeAddress() {
         return homeAddress;
     }
 
-    public void setHomeAddress(AddressDataSet homeAddress) {
+    public void setHomeAddress(HomeAddress homeAddress) {
         this.homeAddress = homeAddress;
     }
 
@@ -89,5 +90,22 @@ public class User {
                 ", address=" + homeAddress +
                 ", phone: " + phones +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return getId() == user.getId() &&
+                getAge() == user.getAge() &&
+                Objects.equals(getName(), user.getName()) &&
+                Objects.equals(getHomeAddress(), user.getHomeAddress()) &&
+                Objects.equals(phones, user.phones);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getAge(), getHomeAddress(), phones);
     }
 }

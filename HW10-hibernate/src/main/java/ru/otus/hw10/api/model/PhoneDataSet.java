@@ -1,6 +1,7 @@
 package ru.otus.hw10.api.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "phones")
@@ -11,10 +12,12 @@ public class PhoneDataSet {
     @Column(name = "id", nullable = false)
     private long id;
 
+
+
     @Column(name = "number", length = 20)
     private String number;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_person_id", referencedColumnName = "id")
     private User person;
 
@@ -51,5 +54,20 @@ public class PhoneDataSet {
                 "id=" + id +
                 ", number='" + number + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhoneDataSet that = (PhoneDataSet) o;
+        return getId() == that.getId() &&
+                Objects.equals(getNumber(), that.getNumber()) &&
+                Objects.equals(getPerson(), that.getPerson());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getNumber(), getPerson());
     }
 }

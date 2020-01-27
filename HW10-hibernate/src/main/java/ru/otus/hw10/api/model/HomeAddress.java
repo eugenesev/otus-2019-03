@@ -1,10 +1,11 @@
 package ru.otus.hw10.api.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "addresses")
-public class AddressDataSet {
+public class HomeAddress {
 
     @Id
     @Column(name = "id")
@@ -18,10 +19,10 @@ public class AddressDataSet {
             cascade = CascadeType.ALL)
     private User person;
 
-    public AddressDataSet() {
+    public HomeAddress() {
     }
 
-    public AddressDataSet(String street) {
+    public HomeAddress(String street) {
         this.street = street;
     }
 
@@ -47,9 +48,24 @@ public class AddressDataSet {
 
     @Override
     public String toString() {
-        return "AddressDataSet{" +
+        return "HomeAddress{" +
                 "id=" + id +
                 ", street='" + street + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HomeAddress that = (HomeAddress) o;
+        return getId() == that.getId() &&
+                Objects.equals(getStreet(), that.getStreet()) &&
+                Objects.equals(getPerson(), that.getPerson());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getStreet(), getPerson());
     }
 }
