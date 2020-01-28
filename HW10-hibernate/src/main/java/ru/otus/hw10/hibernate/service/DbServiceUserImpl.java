@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.otus.hw10.api.dao.UserDao;
 import ru.otus.hw10.api.model.User;
 import ru.otus.hw10.api.service.DBServiceUser;
-import ru.otus.hw10.api.service.DbServiceException;
+import ru.otus.hw10.api.exceptions.DbServiceException;
 import ru.otus.hw10.api.sessionmanager.SessionManager;
 
 import java.util.Optional;

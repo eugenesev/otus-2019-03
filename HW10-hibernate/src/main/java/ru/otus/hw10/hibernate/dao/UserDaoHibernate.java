@@ -5,7 +5,7 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw10.api.dao.UserDao;
-import ru.otus.hw10.api.dao.UserDaoException;
+import ru.otus.hw10.api.exceptions.UserDaoException;
 import ru.otus.hw10.api.model.User;
 import ru.otus.hw10.api.sessionmanager.SessionManager;
 import ru.otus.hw10.hibernate.sessionmanager.DatabaseSessionHibernate;

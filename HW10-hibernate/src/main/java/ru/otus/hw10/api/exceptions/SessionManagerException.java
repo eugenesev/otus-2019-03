@@ -1,7 +1,7 @@
-package ru.otus.hw10.api.sessionmanager;
+package ru.otus.hw10.api.exceptions;
 
 
-public class SessionManagerException extends RuntimeException {
+public class SessionManagerException extends HomeWorkException {
   public SessionManagerException(String msg) {
     super(msg);
   }
