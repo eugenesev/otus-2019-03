@@ -101,7 +101,7 @@ public class User {
                 getAge() == user.getAge() &&
                 Objects.equals(getName(), user.getName()) &&
                 Objects.equals(getHomeAddress(), user.getHomeAddress()) &&
-                Objects.equals(phones, user.phones);
+                phones.containsAll(user.phones);
     }
 
     @Override

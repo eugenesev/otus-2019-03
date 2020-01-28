@@ -17,7 +17,7 @@ public class PhoneDataSet {
     @Column(name = "number", length = 20)
     private String number;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_person_id", referencedColumnName = "id")
     private User person;
 
@@ -62,12 +62,11 @@ public class PhoneDataSet {
         if (o == null || getClass() != o.getClass()) return false;
         PhoneDataSet that = (PhoneDataSet) o;
         return getId() == that.getId() &&
-                Objects.equals(getNumber(), that.getNumber()) &&
-                Objects.equals(getPerson(), that.getPerson());
+                Objects.equals(getNumber(), that.getNumber());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getNumber(), getPerson());
+        return Objects.hash(getId(), getNumber());
     }
 }

@@ -2,8 +2,6 @@ package ru.otus.hw10;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.stat.EntityStatistics;
-import org.hibernate.stat.Statistics;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,10 +10,8 @@ import ru.otus.hw10.api.model.PhoneDataSet;
 import ru.otus.hw10.api.model.User;
 import ru.otus.hw10.api.model.HomeAddress;
 
-import ru.otus.hw10.api.service.DBServiceUser;
 import ru.otus.hw10.hibernate.HibernateUtils;
 import ru.otus.hw10.hibernate.dao.UserDaoHibernate;
-import ru.otus.hw10.hibernate.service.DbServiceUserImpl;
 import ru.otus.hw10.hibernate.sessionmanager.SessionManagerHibernate;
 
 import java.util.Optional;
@@ -31,7 +27,6 @@ public class UserDaoHibernateTest {
 
     private SessionManagerHibernate sessionManagerHibernate;
     private UserDaoHibernate userDaoHibernate;
-    private DbServiceUserImpl dbServiceUserImpl;
 
 
     protected SessionFactory sessionFactory;
@@ -41,7 +36,6 @@ public class UserDaoHibernateTest {
         sessionFactory = HibernateUtils.buildSessionFactory(HIBERNATE_CFG_XML_FILE_RESOURCE, User.class, HomeAddress.class, PhoneDataSet.class);
         sessionManagerHibernate = new SessionManagerHibernate(sessionFactory);
         userDaoHibernate = new UserDaoHibernate(sessionManagerHibernate);
-        dbServiceUserImpl = new DbServiceUserImpl(userDaoHibernate);
     }
 
     @AfterEach
@@ -58,16 +52,15 @@ public class UserDaoHibernateTest {
 
         sessionManagerHibernate.beginSession();
         Optional<User> mayBeUser = userDaoHibernate.findById(expectedUser.getId());
+        assertThat(mayBeUser.get()).isEqualTo(expectedUser);
         sessionManagerHibernate.commitSession();
+
         assertThat(mayBeUser.get()).isNotNull().hasFieldOrPropertyWithValue("id", expectedUser.getId());
         assertThat(mayBeUser.get()).isNotNull().hasFieldOrPropertyWithValue("name", expectedUser.getName());
         assertThat(mayBeUser.get()).isNotNull().hasFieldOrPropertyWithValue("age", expectedUser.getAge());
-
-//        Optional<User> mayBeUser2 = dbServiceUserImpl.getUser(expectedUser.getId());
-//        assertThat(mayBeUser2.get()).isNotNull().hasFieldOrPropertyWithValue("homeAddress", expectedUser.getHomeAddress());
-
-//        assertThat(mayBeUser2.get().toString()).isEqualTo(expectedUser.toString());
-
+        assertThat(mayBeUser.get().getHomeAddress()).isNotNull().hasFieldOrPropertyWithValue("street", expectedUser.getHomeAddress().getStreet());
+//      Can throw LazyInitializationException
+        assertThat(mayBeUser.get().getPhone().get(0).getNumber()).isNotNull().isEqualTo("112-22-33");
     }
 
     @DisplayName(" корректно сохранять пользователя")
@@ -80,10 +73,13 @@ public class UserDaoHibernateTest {
 
         assertThat(id).isGreaterThan(0);
 
-        User actualUser = loadUser(id);
+        User actualUser = loadUserWithRelations(id);
         assertThat(actualUser).isNotNull().hasFieldOrPropertyWithValue("id", expectedUser.getId());
         assertThat(actualUser).isNotNull().hasFieldOrPropertyWithValue("name", expectedUser.getName());
         assertThat(actualUser).isNotNull().hasFieldOrPropertyWithValue("age", expectedUser.getAge());
+        assertThat(actualUser.getHomeAddress()).isNotNull().hasFieldOrPropertyWithValue("street", expectedUser.getHomeAddress().getStreet());
+//      Can throw LazyInitializationException
+        assertThat(actualUser.getPhone().get(0).getNumber()).isNotNull();
     }
 
     @DisplayName(" возвращать менеджер сессий")
@@ -114,14 +110,11 @@ public class UserDaoHibernateTest {
         session.getTransaction().commit();
     }
 
-    protected User loadUser(long id) {
+    protected User loadUserWithRelations(long id) {
         try (Session session = sessionFactory.openSession()) {
-            return session.find(User.class, id);
+            User user = session.find(User.class, id);
+            user.getPhone().isEmpty();
+            return user;
         }
-    }
-
-    protected EntityStatistics getUserStatistics() {
-        Statistics stats = sessionFactory.getStatistics();
-        return stats.getEntityStatistics(User.class.getName());
     }
 }

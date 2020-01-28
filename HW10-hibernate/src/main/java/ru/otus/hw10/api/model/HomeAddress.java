@@ -60,12 +60,11 @@ public class HomeAddress {
         if (o == null || getClass() != o.getClass()) return false;
         HomeAddress that = (HomeAddress) o;
         return getId() == that.getId() &&
-                Objects.equals(getStreet(), that.getStreet()) &&
-                Objects.equals(getPerson(), that.getPerson());
+                Objects.equals(getStreet(), that.getStreet());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getStreet(), getPerson());
+        return Objects.hash(getId(), getStreet());
     }
 }
