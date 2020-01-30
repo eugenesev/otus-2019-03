@@ -25,7 +25,7 @@ public class User {
     @JoinColumn(name = "fk_address_id")
     private HomeAddress homeAddress;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PhoneDataSet> phones = new ArrayList<>();
 
     public User() {

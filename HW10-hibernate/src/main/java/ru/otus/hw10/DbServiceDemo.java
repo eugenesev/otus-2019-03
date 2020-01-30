@@ -29,11 +29,9 @@ public class DbServiceDemo {
 
         User user1 = new User("Вася", 25);
         HomeAddress address = new HomeAddress("Садовая");
-//        address.setPerson(user1); //Нужен AddressDao
         user1.setHomeAddress(address);
 
         PhoneDataSet phone1 = new PhoneDataSet("112-22-33");
-//        phone.setPerson(user1); //Нужен PhoneDao
         user1.addPhone(phone1);
 
         PhoneDataSet phone2 = new PhoneDataSet("112-44-55");
