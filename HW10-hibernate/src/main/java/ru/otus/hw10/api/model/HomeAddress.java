@@ -3,20 +3,23 @@ package ru.otus.hw10.api.model;
 import javax.persistence.*;
 import java.util.Objects;
 
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.GenerationType.*;
+
 @Entity
 @Table(name = "addresses")
 public class HomeAddress {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = SEQUENCE)
     private long id;
 
     @Column(name = "street")
     private String street;
 
     @OneToOne(mappedBy = "homeAddress",
-            cascade = CascadeType.ALL)
+            cascade = ALL)
     private User person;
 
     public HomeAddress() {

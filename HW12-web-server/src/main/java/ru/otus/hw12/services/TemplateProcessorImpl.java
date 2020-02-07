@@ -9,7 +9,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
-public class TemplateProcessorImpl {
+public class TemplateProcessorImpl implements TemplateProcessor{
 
     private final Configuration configuration;
 
@@ -19,6 +19,7 @@ public class TemplateProcessorImpl {
         configuration.setDefaultEncoding("UTF-8");
     }
 
+    @Override
     public String getPage(String filename, Map<String, Object> data) throws IOException {
         try (Writer stream = new StringWriter()) {
             Template template = configuration.getTemplate(filename);

@@ -15,6 +15,8 @@ import java.util.Optional;
 
 public class DbStarterImpl implements DbStarter {
 
+    DBServiceUser dbServiceUser;
+
     @Override
     public void start() {
         SessionFactory sessionFactory = HibernateUtils
@@ -22,7 +24,7 @@ public class DbStarterImpl implements DbStarter {
 
         SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
         UserDao userDao = new UserDaoHibernate(sessionManager);
-        DBServiceUser dbServiceUser = new DbServiceUserImpl(userDao);
+        dbServiceUser = new DbServiceUserImpl(userDao);
 
         User user1 = new User("Вася", 25);
         HomeAddress address = new HomeAddress("Садовая");
@@ -36,5 +38,10 @@ public class DbStarterImpl implements DbStarter {
 
         long id = dbServiceUser.saveUser(user1);
         Optional<User> mayBeCreatedUser = dbServiceUser.getUser(id);
+    }
+
+    @Override
+    public DBServiceUser getDBServiceUser(){
+        return dbServiceUser;
     }
 }
