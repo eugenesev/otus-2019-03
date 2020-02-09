@@ -26,16 +26,20 @@
         <tr>
             <td style="width: 50px">Id</td>
             <td style="width: 150px">Имя</td>
-            <td style="width: 100px">Логин</td>
-            <td style="width: 100px">Пароль</td>
+            <td style="width: 100px">Возраст</td>
+            <td style="width: 100px">Адрес</td>
+            <td style="width: 100px">Телефон</td>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>${User.id}</td>
             <td>${User.name}</td>
-            <td>${User.login}</td>
-            <td>${User.password}</td>
+            <td>${User.age}</td>
+            <td>${User.homeAddress.street}</td>
+            <td><#list Phones as phone>
+                <p>${phone.number}
+                </#list></td>
         </tr>
     </tbody>
 </table>

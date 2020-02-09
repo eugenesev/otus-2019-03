@@ -38,6 +38,12 @@ public class DbStarterImpl implements DbStarter {
 
         long id = dbServiceUser.saveUser(user1);
         Optional<User> mayBeCreatedUser = dbServiceUser.getUser(id);
+
+        User user2 = new User("Дима", 30);
+        HomeAddress address2 = new HomeAddress("Садовая");
+        user2.setHomeAddress(address);
+
+        long id2 = dbServiceUser.saveUser(user1);
     }
 
     @Override
