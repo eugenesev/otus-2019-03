@@ -14,6 +14,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
 import ru.otus.hw10.api.service.DBServiceUser;
 import ru.otus.hw12.services.TemplateProcessor;
+import ru.otus.hw12.servlets.AddUserServlet;
+import ru.otus.hw12.servlets.EditUserServlet;
 import ru.otus.hw12.servlets.UsersApiServlet;
 import ru.otus.hw12.servlets.UsersServlet;
 
@@ -73,12 +75,14 @@ public class UserServerImpl implements UserServer {
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, dbServiceUser)), "/");
+        servletContextHandler.addServlet(new ServletHolder(new EditUserServlet(templateProcessor, dbServiceUser)), "/api/edit/*");
+        servletContextHandler.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbServiceUser)), "/api/add");
         servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(dbServiceUser, gson)), "/api/user/*");
         return servletContextHandler;
     }
 
     private Handler applySecurity(ServletContextHandler servletContextHandler) {
-        return createBasicAuthSecurityHandler(servletContextHandler, "/", "/api/user/*");
+        return createBasicAuthSecurityHandler(servletContextHandler, "/", "/api/user/*", "/api/edit/*");
     }
 
     private SecurityHandler createBasicAuthSecurityHandler(ServletContextHandler context, String... paths) {

@@ -7,18 +7,33 @@
             const userDataContainer = document.getElementById('userDataContainer');
             const id = userIdTextBox.value;
             //fetch('api/user?id=' + id)
-            fetch('api/user/' + id)
-                .then(response => response.json())
-                .then(user => userDataContainer.innerHTML = JSON.stringify(user));
+            postMessage('api/edit/' + id);
         }
     </script>
+
+    <style>
+        .btn {
+            display: inline-block; /* Строчно-блочный элемент */
+            background: #8C959D; /* Серый цвет фона */
+            color: #fff; /* Белый цвет текста */
+            padding: 1rem 1.5rem; /* Поля вокруг текста */
+            text-decoration: none; /* Убираем подчёркивание */
+            border-radius: 3px; /* Скругляем уголки */
+        }
+    </style>
+
 </head>
 
+
+
 <body>
-<h4>Получить пользователя по id</h4>
-<input type="text" id = "userIdTextBox" value="3" placeholder="Введите id пользователя">
-<button onclick="getUserById()">Получить</button>
-<pre id = "userDataContainer"></pre>
+<h4>Введите id пользователя для редактирования</h4>
+<input type="text" id = "userIdTextBox" value="1" placeholder="Введите id пользователя">
+<button onclick="document.location='api/edit/5'">Редактировать</button>
+<div id = "userDataContainer"></div>
+
+<a href="api/edit/1" class="btn">Получить пользователей</a>
+<a href="api/add" class="btn">Добавить пользователя</a>
 
 <h4>Случайный пользователь</h4>
 <table style="width: 400px">
@@ -40,6 +55,9 @@
             <td><#list Phones as phone>
                 <p>${phone.number}
                 </#list></td>
+            <td>
+                <a href="api/edit/${User.id}">Изменить</a>
+            </td>
         </tr>
     </tbody>
 </table>

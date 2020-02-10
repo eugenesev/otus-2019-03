@@ -14,7 +14,7 @@ import java.util.Map;
 public class UsersServlet extends HttpServlet {
 
     private static final String USERS_PAGE_TEMPLATE = "users.html";
-    private static final String TEMPLATE_ATTR_RANDOM_USER = "User";
+    private static final String TEMPLATE_ATTR_USER = "User";
     private static final String TEMPLATE_ATTR_USER_PHONES = "Phones";
 
     private final DBServiceUser dbServiceUser;
@@ -28,7 +28,7 @@ public class UsersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
         Map<String, Object> paramsMap = new HashMap<>();
-        dbServiceUser.getUser(1).ifPresent(user -> {paramsMap.put(TEMPLATE_ATTR_RANDOM_USER, user);
+        dbServiceUser.getUser(1).ifPresent(user -> {paramsMap.put(TEMPLATE_ATTR_USER, user);
             paramsMap.put(TEMPLATE_ATTR_USER_PHONES, user.getPhone());});
 
         response.setContentType("text/html");

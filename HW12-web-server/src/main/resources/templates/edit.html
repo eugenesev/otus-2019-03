@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <#if User?has_content>
+    <title>Пользователь id=${User.id}</title>
+    <#else>
+    <title>Добавить юзера</title>
+    </#if>
+</head>
+<body>
+
+<#if User?has_content>
+    <form action="/api/edit" method="POST">
+<#else>
+    <form action="/api/add" method="POST">
+</#if>
+<#if User?has_content>
+<#assign id = User.id>
+<#assign name = User.name>
+<#assign age = User.age>
+<#assign address = User.homeAddress.street>
+<#assign phones = Phones>
+<#else>
+        <#assign id = "">
+        <#assign name = "">
+        <#assign age = "">
+        <#assign address = "">
+        <#assign phones = "">
+</#if>
+    <input type="hidden" name="id" value="${id}">
+    <label for="name">Имя</label>
+    <input type="text" name="name" id="name" value="${name}">
+    <p>
+    <label for="age">Возраст</label>
+    <input type="text" name="age" id="age"  value="${age}">
+    <p>
+    <label for="address">Адрес</label>
+    <input type="text" name="homeAddress" id="address" value="${address}">
+    <p>
+    <label for="phones">Телефон</label>
+    <input type="text" name="phones" id="phones" value="${phones}">
+    <p>
+    <input type="submit" value="Сохранить">
+</form>
+
+</body>
+</html>
