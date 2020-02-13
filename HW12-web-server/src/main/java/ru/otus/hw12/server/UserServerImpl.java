@@ -14,10 +14,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
 import ru.otus.hw10.api.service.DBServiceUser;
 import ru.otus.hw12.services.TemplateProcessor;
-import ru.otus.hw12.servlets.AddUserServlet;
-import ru.otus.hw12.servlets.EditUserServlet;
-import ru.otus.hw12.servlets.UsersApiServlet;
-import ru.otus.hw12.servlets.UsersServlet;
+import ru.otus.hw12.servlets.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +73,7 @@ public class UserServerImpl implements UserServer {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, dbServiceUser)), "/");
         servletContextHandler.addServlet(new ServletHolder(new EditUserServlet(templateProcessor, dbServiceUser)), "/api/edit/*");
+        servletContextHandler.addServlet(new ServletHolder(new GetPhonesServlet(dbServiceUser, gson)), "/api/phones/*");
         servletContextHandler.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbServiceUser)), "/api/add");
         servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(dbServiceUser, gson)), "/api/users");
         return servletContextHandler;

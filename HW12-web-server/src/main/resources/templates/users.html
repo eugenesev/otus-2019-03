@@ -2,24 +2,25 @@
 <head>
     <title>Пользователи</title>
     <script>
-        function getUserById() {
-            const userDataContainer = document.getElementById('userDataContainer');
+        function getPhonesById(id) {
+            const userPhonesContainer = document.getElementById('userPhonesContainer' + id);
+            const getUserPhonesContainer = document.getElementById('getUserPhonesContainer' + id);
             // //fetch('api/user?id=' + id)
-            const requestURL = 'api/users';
-            var request = new XMLHttpRequest();
-            request.open('GET', requestURL);
-            request.responseType = 'json';
-            request.send();
-            request.onload = function() {
-                var users = request.response;
-                userDataContainer.textContent = users;
-            }
-            //
 
-            // fetch('api/user')
-            //     .then(response => response.json())
-            //     .then(user => userDataContainer.innerHTML = JSON.stringify(user));
-        };
+            // const requestURL = 'api/phones/' + id;
+            // var request = new XMLHttpRequest();
+            // request.open('GET', requestURL);
+            // request.responseType = 'json';
+            // request.send();
+            // request.onload = function() {
+            //     var phones = request.response;
+            //     userPhonesContainer.textContent = phones;
+            // }
+            fetch('api/phones/' + id)
+                .then(response => response.json())
+                .then(phones => userPhonesContainer.textContent = phones);
+            getUserPhonesContainer.style.display = "none";
+        }
 
         function viewDiv(){
             var divUsers = document.getElementById("divUsers");
@@ -34,25 +35,26 @@
                 "        </tr>\n" +
                 "    </thead>\n" +
                 "    <tbody>\n" +
-                "        <tr>\n" +
-                "            <td><#list Users as User>\n" +
+                "        <#list Users as User><tr>\n" +
                 "            <td>${User.id}</td>\n" +
                 "            <td>${User.name}</td>\n" +
                 "            <td>${User.age}</td>\n" +
                 "            <td>${User.homeAddress.street}</td>\n" +
-                "            <td><#if User.phones?has_content><#list User.phones as phone>\n" +
-                "                <p>${phone.number}\n" +
-                "                </#list></td>\n" +
-                "    </#if>"+
-                "            <td>\n" +
-                "                <a href=\"api/edit/${User.id}\">Изменить</a>\n" +
+                "            <td>" +
+                "               <div id = \"userPhonesContainer${User.id}\"></div>"+
+                "               <div id = \"getUserPhonesContainer${User.id}\">" +
+                "                   <a href=\"#UsersTable\" class=\"btn\" onclick='getPhonesById(${User.id})'>Показать телефон</a>\n" +
+                "               </div>"+
                 "            </td>\n" +
-                "            </#list></td>\n" +
-                "        </tr>\n" +
+                "            <td>\n" +
+                "                <a href=\"api/edit/${User.id}\" class=\"btn\">Изменить</a>\n" +
+                "            </td>\n" +
+                "        </tr></#list>\n" +
                 "    </tbody>\n" +
                 "</table>"
             divUsers.style.display = "block";
-        };
+        }
+
         </script>
 
     <style>
@@ -76,16 +78,15 @@
 
 
 <body>
-<button class="btn" onclick="getUserById()">Получить json</button>
-<div id = "userDataContainer"></div>
-<p>
-<a href="" class="btn" onclick="viewDiv()" >Получить пользователей</a>
-<a href="api/add" class="btn">Добавить пользователя</a>
+<button class="btn" >Получить json</button>
 
+<p>
+<a href="#UsersTable" class="btn" onclick="viewDiv()" >Получить пользователей</a>
+<a href="api/add" class="btn">Добавить пользователя</a>
 <input class="btn" type="button" value="Click" onclick="viewDiv()">
 
 <h4>Случайный пользователь</h4>
-
+<a name="UsersTable"></a>
 <div id="divUsers"></div>
 </body>
 </html>

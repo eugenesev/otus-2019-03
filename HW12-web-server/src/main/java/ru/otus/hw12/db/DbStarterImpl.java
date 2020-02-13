@@ -41,6 +41,8 @@ public class DbStarterImpl implements DbStarter {
         User user2 = new User("Дима", 30);
         HomeAddress address2 = new HomeAddress("Садовая");
         user2.setHomeAddress(address2);
+        PhoneDataSet phone3 = new PhoneDataSet("255-22-55");
+        user2.addPhone(phone3);
 
         dbServiceUser.saveUser(user2);
     }
