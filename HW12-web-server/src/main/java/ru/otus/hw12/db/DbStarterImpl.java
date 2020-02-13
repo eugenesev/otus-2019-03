@@ -36,14 +36,13 @@ public class DbStarterImpl implements DbStarter {
         PhoneDataSet phone2 = new PhoneDataSet("112-44-55");
         user1.addPhone(phone2);
 
-        long id = dbServiceUser.saveUser(user1);
-        Optional<User> mayBeCreatedUser = dbServiceUser.getUser(id);
+        dbServiceUser.saveUser(user1);
 
         User user2 = new User("Дима", 30);
         HomeAddress address2 = new HomeAddress("Садовая");
-        user2.setHomeAddress(address);
+        user2.setHomeAddress(address2);
 
-        long id2 = dbServiceUser.saveUser(user1);
+        dbServiceUser.saveUser(user2);
     }
 
     @Override

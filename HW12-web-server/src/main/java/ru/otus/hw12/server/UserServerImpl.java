@@ -77,7 +77,7 @@ public class UserServerImpl implements UserServer {
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, dbServiceUser)), "/");
         servletContextHandler.addServlet(new ServletHolder(new EditUserServlet(templateProcessor, dbServiceUser)), "/api/edit/*");
         servletContextHandler.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbServiceUser)), "/api/add");
-        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(dbServiceUser, gson)), "/api/user/*");
+        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(dbServiceUser, gson)), "/api/users");
         return servletContextHandler;
     }
 

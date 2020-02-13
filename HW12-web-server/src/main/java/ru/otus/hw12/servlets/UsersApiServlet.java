@@ -1,6 +1,7 @@
 package ru.otus.hw12.servlets;
 
 import com.google.gson.Gson;
+import org.hibernate.ScrollableResults;
 import ru.otus.hw10.api.model.User;
 import ru.otus.hw10.api.service.DBServiceUser;
 
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class UsersApiServlet extends HttpServlet {
@@ -26,17 +29,23 @@ public class UsersApiServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        User user = dbServiceUser.getUser(extractIdFromRequest(request)).orElse(null);
+
+        List<User> users = dbServiceUser.getAllUsers();
+        users.forEach(user->System.out.println());
+        User user = dbServiceUser.getUser(1).orElse(null);
 
         response.setContentType("application/json;charset=UTF-8");
         ServletOutputStream out = response.getOutputStream();
-        out.print(gson.toJson(user));
+
+//        System.out.println(users);
+//        System.out.println(gson.toJson(user));
+        out.print(gson.toJson(user.getHomeAddress()));
     }
 
-    private long extractIdFromRequest(HttpServletRequest request) {
-        String[] path = request.getPathInfo().split("/");
-        String id = (path.length > 1)? path[ID_PATH_PARAM_POSITION]: String.valueOf(- 1);
-        return Long.parseLong(id);
-    }
+//    private long extractIdFromRequest(HttpServletRequest request) {
+//        String[] path = request.getPathInfo().split("/");
+//        String id = (path.length > 1)? path[ID_PATH_PARAM_POSITION]: String.valueOf(- 1);
+//        return Long.parseLong(id);
+//    }
 
 }

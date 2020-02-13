@@ -3,13 +3,57 @@
     <title>Пользователи</title>
     <script>
         function getUserById() {
-            const userIdTextBox = document.getElementById('userIdTextBox');
             const userDataContainer = document.getElementById('userDataContainer');
-            const id = userIdTextBox.value;
-            //fetch('api/user?id=' + id)
-            postMessage('api/edit/' + id);
-        }
-    </script>
+            // //fetch('api/user?id=' + id)
+            const requestURL = 'api/users';
+            var request = new XMLHttpRequest();
+            request.open('GET', requestURL);
+            request.responseType = 'json';
+            request.send();
+            request.onload = function() {
+                var users = request.response;
+                userDataContainer.textContent = users;
+            }
+            //
+
+            // fetch('api/user')
+            //     .then(response => response.json())
+            //     .then(user => userDataContainer.innerHTML = JSON.stringify(user));
+        };
+
+        function viewDiv(){
+            var divUsers = document.getElementById("divUsers");
+            divUsers.innerHTML = "<table style=\"width: 400px\">\n" +
+                "    <thead>\n" +
+                "        <tr>\n" +
+                "            <td style=\"width: 50px\">Id</td>\n" +
+                "            <td style=\"width: 150px\">Имя</td>\n" +
+                "            <td style=\"width: 100px\">Возраст</td>\n" +
+                "            <td style=\"width: 100px\">Адрес</td>\n" +
+                "            <td style=\"width: 100px\">Телефон</td>\n" +
+                "        </tr>\n" +
+                "    </thead>\n" +
+                "    <tbody>\n" +
+                "        <tr>\n" +
+                "            <td><#list Users as User>\n" +
+                "            <td>${User.id}</td>\n" +
+                "            <td>${User.name}</td>\n" +
+                "            <td>${User.age}</td>\n" +
+                "            <td>${User.homeAddress.street}</td>\n" +
+                "            <td><#if User.phones?has_content><#list User.phones as phone>\n" +
+                "                <p>${phone.number}\n" +
+                "                </#list></td>\n" +
+                "    </#if>"+
+                "            <td>\n" +
+                "                <a href=\"api/edit/${User.id}\">Изменить</a>\n" +
+                "            </td>\n" +
+                "            </#list></td>\n" +
+                "        </tr>\n" +
+                "    </tbody>\n" +
+                "</table>"
+            divUsers.style.display = "block";
+        };
+        </script>
 
     <style>
         .btn {
@@ -20,6 +64,11 @@
             text-decoration: none; /* Убираем подчёркивание */
             border-radius: 3px; /* Скругляем уголки */
         }
+
+        #divUsers{
+            display: none;
+        }
+
     </style>
 
 </head>
@@ -27,39 +76,16 @@
 
 
 <body>
-<h4>Введите id пользователя для редактирования</h4>
-<input type="text" id = "userIdTextBox" value="1" placeholder="Введите id пользователя">
-<button onclick="document.location='api/edit/5'">Редактировать</button>
+<button class="btn" onclick="getUserById()">Получить json</button>
 <div id = "userDataContainer"></div>
-
-<a href="api/edit/1" class="btn">Получить пользователей</a>
+<p>
+<a href="" class="btn" onclick="viewDiv()" >Получить пользователей</a>
 <a href="api/add" class="btn">Добавить пользователя</a>
 
+<input class="btn" type="button" value="Click" onclick="viewDiv()">
+
 <h4>Случайный пользователь</h4>
-<table style="width: 400px">
-    <thead>
-        <tr>
-            <td style="width: 50px">Id</td>
-            <td style="width: 150px">Имя</td>
-            <td style="width: 100px">Возраст</td>
-            <td style="width: 100px">Адрес</td>
-            <td style="width: 100px">Телефон</td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>${User.id}</td>
-            <td>${User.name}</td>
-            <td>${User.age}</td>
-            <td>${User.homeAddress.street}</td>
-            <td><#list Phones as phone>
-                <p>${phone.number}
-                </#list></td>
-            <td>
-                <a href="api/edit/${User.id}">Изменить</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+
+<div id="divUsers"></div>
 </body>
 </html>
