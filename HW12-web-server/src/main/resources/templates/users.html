@@ -2,36 +2,25 @@
 <head>
     <title>Пользователи</title>
     <script>
-        function getPhonesById(id) {
+        function getUserPhonesById(id) {
             const userPhonesContainer = document.getElementById('userPhonesContainer' + id);
             const getUserPhonesContainer = document.getElementById('getUserPhonesContainer' + id);
-            // //fetch('api/user?id=' + id)
-
-            // const requestURL = 'api/phones/' + id;
-            // var request = new XMLHttpRequest();
-            // request.open('GET', requestURL);
-            // request.responseType = 'json';
-            // request.send();
-            // request.onload = function() {
-            //     var phones = request.response;
-            //     userPhonesContainer.textContent = phones;
-            // }
             fetch('api/phones/' + id)
                 .then(response => response.json())
                 .then(phones => userPhonesContainer.textContent = phones);
             getUserPhonesContainer.style.display = "none";
         }
 
-        function viewDiv(){
+        function usersViewDiv(){
             var divUsers = document.getElementById("divUsers");
-            divUsers.innerHTML = "<table style=\"width: 400px\">\n" +
+            divUsers.innerHTML = "<table style=\"width: 600px\">\n" +
                 "    <thead>\n" +
                 "        <tr>\n" +
-                "            <td style=\"width: 50px\">Id</td>\n" +
+                "            <td style=\'width: 50px\'>Id</td>\n" +
                 "            <td style=\"width: 150px\">Имя</td>\n" +
                 "            <td style=\"width: 100px\">Возраст</td>\n" +
-                "            <td style=\"width: 100px\">Адрес</td>\n" +
-                "            <td style=\"width: 100px\">Телефон</td>\n" +
+                "            <td style=\"width: 150px\">Адрес</td>\n" +
+                "            <td style=\'width: 150px\'>Телефон</td>\n" +
                 "        </tr>\n" +
                 "    </thead>\n" +
                 "    <tbody>\n" +
@@ -43,7 +32,7 @@
                 "            <td>" +
                 "               <div id = \"userPhonesContainer${User.id}\"></div>"+
                 "               <div id = \"getUserPhonesContainer${User.id}\">" +
-                "                   <a href=\"#UsersTable\" class=\"btn\" onclick='getPhonesById(${User.id})'>Показать телефон</a>\n" +
+                "                   <a href=\"#UsersTable\" class=\"btn\" onclick='getUserPhonesById(${User.id})'>Показать телефон</a>\n" +
                 "               </div>"+
                 "            </td>\n" +
                 "            <td>\n" +
@@ -51,7 +40,7 @@
                 "            </td>\n" +
                 "        </tr></#list>\n" +
                 "    </tbody>\n" +
-                "</table>"
+                "</table>";
             divUsers.style.display = "block";
         }
 
@@ -78,14 +67,11 @@
 
 
 <body>
-<button class="btn" >Получить json</button>
 
-<p>
-<a href="#UsersTable" class="btn" onclick="viewDiv()" >Получить пользователей</a>
+<a href="#UsersTable" class="btn" onclick="usersViewDiv()" >Получить пользователей</a>
 <a href="api/add" class="btn">Добавить пользователя</a>
-<input class="btn" type="button" value="Click" onclick="viewDiv()">
 
-<h4>Случайный пользователь</h4>
+<h4>Список пользователей</h4>
 <a name="UsersTable"></a>
 <div id="divUsers"></div>
 </body>
