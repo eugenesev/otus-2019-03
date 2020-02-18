@@ -40,7 +40,6 @@ public class UserServerImpl implements UserServer {
         this.loginServiceForBasicSecurity = loginServiceForBasicSecurity;
         this.templateProcessor = templateProcessor;
         server = initContext();
-        ;
     }
 
     @Override
@@ -75,12 +74,11 @@ public class UserServerImpl implements UserServer {
         servletContextHandler.addServlet(new ServletHolder(new EditUserServlet(templateProcessor, dbServiceUser)), "/api/edit/*");
         servletContextHandler.addServlet(new ServletHolder(new GetPhonesServlet(dbServiceUser, gson)), "/api/phones/*");
         servletContextHandler.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbServiceUser)), "/api/add");
-        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(dbServiceUser, gson)), "/api/users");
         return servletContextHandler;
     }
 
     private Handler applySecurity(ServletContextHandler servletContextHandler) {
-        return createBasicAuthSecurityHandler(servletContextHandler, "/", "/api/user/*", "/api/edit/*");
+        return createBasicAuthSecurityHandler(servletContextHandler, "/", "/api/edit/*s", "/api/phones/*", "/api/add");
     }
 
     private SecurityHandler createBasicAuthSecurityHandler(ServletContextHandler context, String... paths) {

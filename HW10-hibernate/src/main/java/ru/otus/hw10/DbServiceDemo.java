@@ -53,7 +53,7 @@ public class DbServiceDemo {
 
         List<User> list = dbServiceUser.getAllUsers();
         User user = list.get(0);
-        System.out.println("KKKKK"+user);
+        System.out.println("KKKKK"+user.getAge());
 
         System.out.println(user1);
         outputUserOptional("Created user", mayBeCreatedUser);

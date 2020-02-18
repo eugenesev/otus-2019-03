@@ -17,7 +17,6 @@ public class UsersServlet extends HttpServlet {
 
     private static final String USERS_PAGE_TEMPLATE = "users.html";
     private static final String TEMPLATE_ATTR_USERS = "Users";
-    private static final String TEMPLATE_ATTR_USER_PHONES = "Phones";
 
     private final DBServiceUser dbServiceUser;
     private final TemplateProcessor templateProcessor;
@@ -32,13 +31,6 @@ public class UsersServlet extends HttpServlet {
         Map<String, Object> paramsMap = new HashMap<>();
         List<User> users = dbServiceUser.getAllUsers();
         paramsMap.put(TEMPLATE_ATTR_USERS, users);
-//        paramsMap.put(TEMPLATE_ATTR_USER_PHONES, user.getPhone());
-
-        //     <#list Phones as phone>\n" +
-        // "                <p>${phone.number}\n" +
-        // "                </#list>
-
-
         response.setContentType("text/html");
         response.getWriter().println(templateProcessor.getPage(USERS_PAGE_TEMPLATE, paramsMap));
     }

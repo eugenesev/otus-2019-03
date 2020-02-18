@@ -81,7 +81,7 @@ public class UserDaoHibernate implements UserDao {
             userCriteria.select(userRoot);
 
             list.addAll(hibernateSession.createQuery(userCriteria).getResultList());
-            list.forEach(user -> user.getPhone().isEmpty());
+            //list.forEach(user -> user.getPhone().isEmpty());
 
 
         } catch (Exception e) {

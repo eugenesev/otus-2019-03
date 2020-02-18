@@ -9,9 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EditUserServlet extends HttpServlet {
@@ -36,12 +37,13 @@ public class EditUserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Map<String, Object> paramsMap = new HashMap<>();
+        List<String> phones = new ArrayList<>();
         User user = dbServiceUser.getUser(extractIdFromRequest(req)).orElse(null);
+        user.getPhone().forEach(phone -> phones.add(phone.getNumber()));
         paramsMap.put(TEMPLATE_ATTR_USER, user);
-        paramsMap.put(TEMPLATE_ATTR_USER_PHONES, user.getPhone().toString());
-
+        paramsMap.put(TEMPLATE_ATTR_USER_PHONES, phones);
         resp.setContentType("text/html");
         resp.getWriter().println(templateProcessor.getPage(EDIT_PAGE_TEMPLATE, paramsMap));
     }
@@ -59,7 +61,6 @@ public class EditUserServlet extends HttpServlet {
         String name = request.getParameter(PARAM_NAME);
         int age = Integer.parseInt(request.getParameter(PARAM_AGE));
         String homeAddress = request.getParameter(PARAM_ADDRESS);
-
         User user = dbServiceUser.getUser(id).get();
         user.setName(name);
         user.setAge(age);
