@@ -1,6 +1,7 @@
 package ru.otus.hw12.servlets;
 
 import com.google.gson.Gson;
+import ru.otus.hw10.api.model.PhoneDataSet;
 import ru.otus.hw10.api.model.User;
 import ru.otus.hw10.api.service.DBServiceUser;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import java.util.Collections;
 import java.util.List;
 
 public class GetPhonesServlet extends HttpServlet {
@@ -23,21 +25,21 @@ public class GetPhonesServlet extends HttpServlet {
         this.dbServiceUser = dbServiceUser;
         this.gson = gson;
     }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         User user = dbServiceUser.getUser(extractIdFromRequest(req)).orElse(null);
-        List <String> phones = new ArrayList<>();
+        List<String> phones = new ArrayList<>();
 
-        try{
+        if (user != null && !user.getPhone().isEmpty()) {
             user.getPhone().forEach(phone -> phones.add(phone.getNumber()));
             resp.setContentType("application/json;charset=UTF-8");
             ServletOutputStream out = resp.getOutputStream();
             out.print(gson.toJson(phones));
-        }
-        catch (Exception e) {
+        } else {
+            resp.setContentType("application/json;charset=UTF-8");
             ServletOutputStream out = resp.getOutputStream();
-            out.print(gson.toJson("Нет номера"));
-            e.printStackTrace();
+            out.print(gson.toJson(Collections.singleton("No Number")));
         }
     }
 

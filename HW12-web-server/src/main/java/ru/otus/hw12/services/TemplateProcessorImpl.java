@@ -9,7 +9,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
-public class TemplateProcessorImpl implements TemplateProcessor{
+public class TemplateProcessorImpl implements TemplateProcessor {
 
     private final Configuration configuration;
 

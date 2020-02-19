@@ -38,12 +38,16 @@ function increasePhones() {
     <#assign id = User.id>
     <#assign name = User.name>
     <#assign age = User.age>
-    <#assign address = User.homeAddress.street>
+        <#if User.homeAddress?has_content>
+            <#assign address = User.homeAddress.street>
+        <#else>
+            <#assign address = "">
+        </#if>
     <#assign phones = Phones>
     <#else>
     <#assign id = "">
     <#assign name = "">
-    <#assign age = "">
+    <#assign age = 0>
     <#assign address = "">
     <#assign phones = []>
 </#if>
@@ -66,6 +70,5 @@ function increasePhones() {
 <div id="phoneNumber"></div>
 <a href="#Phones" class="btn" onclick="increasePhones()" >+</a>
 <input type="submit" value="Сохранить">
-hello world
 </body>
 </html>

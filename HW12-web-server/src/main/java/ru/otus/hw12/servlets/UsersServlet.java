@@ -30,6 +30,7 @@ public class UsersServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
         Map<String, Object> paramsMap = new HashMap<>();
         List<User> users = dbServiceUser.getAllUsers();
+
         paramsMap.put(TEMPLATE_ATTR_USERS, users);
         response.setContentType("text/html");
         response.getWriter().println(templateProcessor.getPage(USERS_PAGE_TEMPLATE, paramsMap));

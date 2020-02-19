@@ -29,10 +29,8 @@ public class DbStarterImpl implements DbStarter {
         User user1 = new User("Вася", 25);
         HomeAddress address = new HomeAddress("Садовая");
         user1.setHomeAddress(address);
-
         PhoneDataSet phone1 = new PhoneDataSet("112-22-33");
         user1.addPhone(phone1);
-
         PhoneDataSet phone2 = new PhoneDataSet("112-44-55");
         user1.addPhone(phone2);
 
@@ -48,7 +46,7 @@ public class DbStarterImpl implements DbStarter {
     }
 
     @Override
-    public DBServiceUser getDBServiceUser(){
+    public DBServiceUser getDBServiceUser() {
         return dbServiceUser;
     }
 }

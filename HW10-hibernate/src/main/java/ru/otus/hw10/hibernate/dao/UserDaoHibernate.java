@@ -70,28 +70,12 @@ public class UserDaoHibernate implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        List<User> list = new ArrayList<>();
-                DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
-        try {
-            Session hibernateSession = currentSession.getHibernateSession();
-            CriteriaBuilder cb = hibernateSession.getCriteriaBuilder();
-            hibernateSession.createQuery("from User").list();
-            CriteriaQuery<User> userCriteria = cb.createQuery(User.class);
-            Root<User> userRoot = userCriteria.from(User.class);
-            userCriteria.select(userRoot);
 
-            list.addAll(hibernateSession.createQuery(userCriteria).getResultList());
-            //list.forEach(user -> user.getPhone().isEmpty());
+        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
+        Session hibernateSession = currentSession.getHibernateSession();
 
-
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            throw new UserDaoException(e);
-        }
-        return list;
+        return hibernateSession.createQuery("from User").list();
     }
-
-
 
 
 }
