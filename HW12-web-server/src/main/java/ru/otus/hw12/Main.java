@@ -5,9 +5,18 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
+import org.hibernate.SessionFactory;
+import ru.otus.hw10.api.dao.UserDao;
+import ru.otus.hw10.api.model.HomeAddress;
+import ru.otus.hw10.api.model.PhoneDataSet;
+import ru.otus.hw10.api.model.User;
 import ru.otus.hw10.api.service.DBServiceUser;
-import ru.otus.hw12.db.DbStarter;
-import ru.otus.hw12.db.DbStarterImpl;
+import ru.otus.hw10.hibernate.HibernateUtils;
+import ru.otus.hw10.hibernate.dao.UserDaoHibernate;
+import ru.otus.hw10.hibernate.service.DbServiceUserImpl;
+import ru.otus.hw10.hibernate.sessionmanager.SessionManagerHibernate;
+import ru.otus.hw12.db.DbInitializer;
+import ru.otus.hw12.db.DbInitializerImpl;
 import ru.otus.hw12.helpers.FileSystemHelper;
 import ru.otus.hw12.server.UserServer;
 import ru.otus.hw12.server.UserServerImpl;
@@ -21,9 +30,16 @@ public class Main {
     private static final String REALM_NAME = "AnyRealm";
 
     public static void main(String[] args) throws Exception {
-        DbStarter dbStarter = new DbStarterImpl();
-        dbStarter.start();
-        DBServiceUser dbServiceUser = dbStarter.getDBServiceUser();
+        SessionFactory sessionFactory = HibernateUtils
+                .buildSessionFactory("hibernate.cfg.xml", User.class, HomeAddress.class, PhoneDataSet.class);
+
+        SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
+        UserDao userDao = new UserDaoHibernate(sessionManager);
+        DBServiceUser dbServiceUser = new DbServiceUserImpl(userDao);
+
+        DbInitializer dbInitializer = new DbInitializerImpl(dbServiceUser);
+        dbInitializer.init();
+
         Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
 
