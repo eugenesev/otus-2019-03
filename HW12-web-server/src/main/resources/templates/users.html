@@ -11,40 +11,12 @@
             getUserPhonesContainer.style.display = "none";
         }
 
-        function usersViewDiv(){
-            var divUsers = document.getElementById("divUsers");
-            divUsers.innerHTML = "<table style=\"width: 600px\">\n" +
-                "    <thead>\n" +
-                "        <tr>\n" +
-                "            <td style=\'width: 50px\'>Id</td>\n" +
-                "            <td style=\"width: 150px\">Имя</td>\n" +
-                "            <td style=\"width: 100px\">Возраст</td>\n" +
-                "            <td style=\"width: 150px\">Адрес</td>\n" +
-                "            <td style=\'width: 150px\'>Телефон</td>\n" +
-                "        </tr>\n" +
-                "    </thead>\n" +
-                "    <tbody>\n" +
-                "        <#list Users as User><tr>\n" +
-                "            <td>${User.id}</td>\n" +
-                "            <td>${User.name}</td>\n" +
-                "            <td>${User.age}</td>\n" +
-                "            <td>${User.homeAddress.street}</td>\n" +
-                "            <td>" +
-                "               <div id = \"userPhonesContainer${User.id}\"></div>"+
-                "               <div id = \"getUserPhonesContainer${User.id}\">" +
-                "                   <a href=\"#UsersTable\" class=\"btn\" onclick='getUserPhonesById(${User.id})'>Показать телефон</a>\n" +
-                "               </div>"+
-                "            </td>\n" +
-                "            <td>\n" +
-                "                <a href=\"api/edit/${User.id}\" class=\"btn\">Изменить</a>\n" +
-                "            </td>\n" +
-                "        </tr></#list>\n" +
-                "    </tbody>\n" +
-                "</table>";
+        function usersViewDiv() {
+            let divUsers = document.getElementById("divUsers");
             divUsers.style.display = "block";
         }
 
-        </script>
+    </script>
 
     <style>
         .btn {
@@ -56,7 +28,7 @@
             border-radius: 3px; /* Скругляем уголки */
         }
 
-        #divUsers{
+        #divUsers {
             display: none;
         }
 
@@ -65,14 +37,47 @@
 </head>
 
 
-
 <body>
 
-<a href="#UsersTable" class="btn" onclick="usersViewDiv()" >Получить пользователей</a>
-<a href="api/add" class="btn">Добавить пользователя</a>
+<a href="#UsersTable" class="btn" onclick="usersViewDiv()">Получить пользователей</a>
+<a href="users/add" class="btn">Добавить пользователя</a>
 
 <h4>Список пользователей</h4>
-<a name="UsersTable"></a>
-<div id="divUsers"></div>
+<a name="usersTable"></a>
+<div id="divUsers">
+    <table style="width: 600px">
+        <thead>
+        <tr>
+            <td style='width: 50px'>Id</td>
+            <td style="width: 150px">Имя</td>
+            <td style="width: 100px">Возраст</td>
+            <td style="width: 150px">Адрес</td>
+            <td style='width: 150px'>Телефон</td>
+        </tr>
+        </thead>
+        <tbody>
+        <#list users as user>
+        <tr>
+            <td>${user.id}</td>
+            <td>${user.name}</td>
+            <td>${user.age}</td>
+            <#if user.homeAddress?has_content>
+            <td>${user.homeAddress.street}</td>
+            <#else>
+            <td></td>
+        </#if>
+        <td>
+            <div id="userPhonesContainer${user.id}"></div>
+            <div id="getUserPhonesContainer${user.id}">
+                <a href="#usersTable" class="btn" onclick='getUserPhonesById(${user.id})'>Показать телефон</a>
+            </div>
+        </td>
+        <td>
+            <a href="users/edit/${user.id}" class="btn">Изменить</a>
+        </td>
+        </tr></#list>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

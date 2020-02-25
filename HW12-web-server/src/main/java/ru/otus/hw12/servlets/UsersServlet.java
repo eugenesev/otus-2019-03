@@ -16,7 +16,7 @@ import java.util.Map;
 public class UsersServlet extends HttpServlet {
 
     private static final String USERS_PAGE_TEMPLATE = "users.html";
-    private static final String TEMPLATE_ATTR_USERS = "Users";
+    private static final String TEMPLATE_ATTR_USERS = "users";
 
     private final DBServiceUser dbServiceUser;
     private final TemplateProcessor templateProcessor;

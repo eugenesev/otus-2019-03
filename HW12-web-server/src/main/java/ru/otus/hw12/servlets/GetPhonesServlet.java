@@ -1,7 +1,6 @@
 package ru.otus.hw12.servlets;
 
 import com.google.gson.Gson;
-import ru.otus.hw10.api.model.PhoneDataSet;
 import ru.otus.hw10.api.model.User;
 import ru.otus.hw10.api.service.DBServiceUser;
 

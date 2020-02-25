@@ -71,14 +71,22 @@ public class UserServerImpl implements UserServer {
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, dbServiceUser)), "/");
-        servletContextHandler.addServlet(new ServletHolder(new EditUserServlet(templateProcessor, dbServiceUser)), "/api/edit/*");
+        servletContextHandler.addServlet(new ServletHolder(new EditUserServlet(templateProcessor, dbServiceUser)), "/users/edit/*");
+        servletContextHandler.addServlet(new ServletHolder(new EditUserApiServlet(dbServiceUser)), "/api/edit");
         servletContextHandler.addServlet(new ServletHolder(new GetPhonesServlet(dbServiceUser, gson)), "/api/phones/*");
-        servletContextHandler.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbServiceUser)), "/api/add");
+        servletContextHandler.addServlet(new ServletHolder(new AddUserServlet(templateProcessor)), "/users/add");
+        servletContextHandler.addServlet(new ServletHolder(new AddUserApiServlet(dbServiceUser)), "/api/add");
         return servletContextHandler;
     }
 
     private Handler applySecurity(ServletContextHandler servletContextHandler) {
-        return createBasicAuthSecurityHandler(servletContextHandler, "/", "/api/edit/*s", "/api/phones/*", "/api/add");
+        return createBasicAuthSecurityHandler(servletContextHandler, "/",
+                "/users/edit/*",
+                "/api/edit",
+                "/api/phones/*",
+                "/users/add",
+                "/api/add"
+        );
     }
 
     private SecurityHandler createBasicAuthSecurityHandler(ServletContextHandler context, String... paths) {
