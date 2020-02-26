@@ -31,7 +31,7 @@ public class EditUserApiServlet extends HttpServlet {
 
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         long id = Long.parseLong(request.getParameter(PARAM_ID));
         User user = dbServiceUser.getUser(id).orElse(null);
