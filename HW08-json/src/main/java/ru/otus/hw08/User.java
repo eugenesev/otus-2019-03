@@ -5,15 +5,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class User {
-    long id;
+    Long id;
     String name;
     String[] strArr = {"q", "w", "e"};
     List list = new ArrayList();
+    InnerObject object;
 
     public User(long id, String name) {
         this.id = id;
         this.name = name;
         list.add(6);
+        list.add("Six");
+        list.add(new String[]{"a", "s", "d"});
+        list.add(new InnerObject(1, "InnerObjectInList"));
+        object = new InnerObject(2, "InnerObject");
     }
 
     public long getId() {
@@ -39,7 +44,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", strArr=" + Arrays.toString(strArr) +
                 ", list=" + list +
+                ", object=" + object +
                 '}';
     }
-
 }
