@@ -72,10 +72,10 @@ public class UserServerImpl implements UserServer {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, dbServiceUser)), "/");
         servletContextHandler.addServlet(new ServletHolder(new EditUserServlet(templateProcessor, dbServiceUser)), "/users/edit/*");
-        servletContextHandler.addServlet(new ServletHolder(new EditUserApiServlet(dbServiceUser)), "/api/edit");
+        servletContextHandler.addServlet(new ServletHolder(new EditUserApiServlet(dbServiceUser)), "/api/users");
         servletContextHandler.addServlet(new ServletHolder(new GetPhonesServlet(dbServiceUser, gson)), "/api/phones/*");
         servletContextHandler.addServlet(new ServletHolder(new AddUserServlet(templateProcessor)), "/users/add");
-        servletContextHandler.addServlet(new ServletHolder(new AddUserApiServlet(dbServiceUser)), "/api/add");
+        servletContextHandler.addServlet(new ServletHolder(new AddUserApiServlet(dbServiceUser)), "/api/users");
         return servletContextHandler;
     }
 

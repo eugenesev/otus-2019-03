@@ -46,6 +46,10 @@ public class AddUserApiServlet extends HttpServlet {
 
     }
 
+
+
+
+
     private void assertAndSetUserPhones(HttpServletRequest request, User user) {
         List<String> phones = new ArrayList<>();
         Optional.ofNullable(request.getParameterValues(PARAM_PHONES))

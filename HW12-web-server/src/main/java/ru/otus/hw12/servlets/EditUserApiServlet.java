@@ -51,25 +51,43 @@ public class EditUserApiServlet extends HttpServlet {
     private void assertAndSetUserPhones(HttpServletRequest request, User user) {
         List<String> phonesFromClient = new ArrayList<>();
         List<PhoneDataSet> phonesFromDB = user.getPhone();
-        List<String> oldPhonesFromClient = new ArrayList<>();
 
         Optional.ofNullable(request.getParameterValues(PARAM_PHONES))
                 .ifPresent(p -> Collections.addAll(phonesFromClient, p));
-        for (String clPhone : phonesFromClient) {
-            if (!clPhone.equals("")) {
-                for (PhoneDataSet dbPhone : phonesFromDB) {
-                    if (dbPhone.getNumber().equals(clPhone)) {
-                        oldPhonesFromClient.add(clPhone);
-                    }
+
+        List<String> newPhonesFromClient = findNewPhones(phonesFromClient, phonesFromDB);
+
+        for (PhoneDataSet dbPhone : phonesFromDB) {
+            if (!phonesFromClient.contains(dbPhone.getNumber())) {
+                if (!newPhonesFromClient.get(0).equals("")) {
+                    dbPhone.setNumber(newPhonesFromClient.get(0));
+                    newPhonesFromClient.remove(0);
                 }
             }
         }
-        phonesFromClient.removeAll(oldPhonesFromClient);
-        for (String newClPhone : phonesFromClient) {
+
+        for (String newClPhone : newPhonesFromClient) {
             if (!newClPhone.equals("")) {
                 user.addPhone(new PhoneDataSet(newClPhone));
             }
         }
+    }
+
+    private List<String> findNewPhones(List<String> phonesFromClient, List<PhoneDataSet> phonesFromDB) {
+        List<String> oldPhones = new ArrayList<>();
+        List<String> newPhonesFromClient = new ArrayList<>();
+        for (String clPhone : phonesFromClient) {
+            if (!clPhone.equals("")) {
+                for (PhoneDataSet dbPhone : phonesFromDB) {
+                    if (dbPhone.getNumber().equals(clPhone)) {
+                        oldPhones.add(clPhone);
+                    }
+                }
+            }
+        }
+        newPhonesFromClient.addAll(phonesFromClient);
+        newPhonesFromClient.removeAll(oldPhones);
+        return newPhonesFromClient;
     }
 
     private void assertAndSetUserHomeAddress(HttpServletRequest request, User user) {

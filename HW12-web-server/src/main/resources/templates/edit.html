@@ -16,25 +16,30 @@
         let method = "";
 
         if (id == "addForm") {
-            api = "/api/add?";
+            api = "/api/users?";
             method = 'POST'
         }
 
         let userId = form.elements.id.value;
         if (id == "editForm") {
-            api = "/api/edit?id=" + userId + "&";
+            api = "/api/users?id=" + userId + "&";
             method = 'PUT'
         }
 
-        let phonesArr = form.elements.phone;
         let phones = "";
-        if (Array.isArray(phonesArr)) {
-            for (let i = 0; i < phonesArr.length; i++) {
-                phones += "&phone=" + phonesArr[i].value;
+        if(form.elements.phone){
+            let phonesArr = form.elements.phone;
+            if (phonesArr.length > 0) {
+                for (let i = 0; i < phonesArr.length; i++) {
+                    phones += "&phone=" + phonesArr[i].value;
+                }
             }
-        } else {
-            if (phonesArr != null) {
-                phones += "&phone=" + phonesArr.value;
+            else {
+                if (phonesArr != null) {
+                    phones += "&phone=" + phonesArr.value;
+                }else {
+                    phones += "&phone=";
+                }
             }
         }
 
