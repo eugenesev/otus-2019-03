@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GetPhonesServlet extends HttpServlet {
+public class PhoneApiServlet extends HttpServlet {
     private static final int ID_PATH_PARAM_POSITION = 1;
     private final DBServiceUser dbServiceUser;
     private final Gson gson;
 
 
-    public GetPhonesServlet(DBServiceUser dbServiceUser, Gson gson) {
+    public PhoneApiServlet(DBServiceUser dbServiceUser, Gson gson) {
         this.dbServiceUser = dbServiceUser;
         this.gson = gson;
     }

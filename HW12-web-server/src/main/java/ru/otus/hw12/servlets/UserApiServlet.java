@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class EditUserApiServlet extends HttpServlet {
+public class UserApiServlet extends HttpServlet {
 
     private static final String PARAM_ID = "id";
     private static final String PARAM_NAME = "name";
@@ -23,12 +23,29 @@ public class EditUserApiServlet extends HttpServlet {
     private static final String PARAM_ADDRESS = "homeAddress";
     private static final String PARAM_PHONES = "phone";
 
+
     private final DBServiceUser dbServiceUser;
 
-    public EditUserApiServlet(DBServiceUser dbServiceUser) {
+    public UserApiServlet(DBServiceUser dbServiceUser) {
         this.dbServiceUser = dbServiceUser;
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        User user = new User();
+
+        setUserName(request, user);
+        setUserAge(request, user);
+        setUserHomeAddress(request, user);
+        setUserPhones(request, user);
+
+        dbServiceUser.saveUser(user);
+        response.setContentType("text/html;charset=UTF-8");
+        ServletOutputStream out = response.getOutputStream();
+        out.print("Готово!");
+
+    }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -75,7 +92,6 @@ public class EditUserApiServlet extends HttpServlet {
 
     private List<String> findNewPhones(List<String> phonesFromClient, List<PhoneDataSet> phonesFromDB) {
         List<String> oldPhones = new ArrayList<>();
-        List<String> newPhonesFromClient = new ArrayList<>();
         for (String clPhone : phonesFromClient) {
             if (!clPhone.equals("")) {
                 for (PhoneDataSet dbPhone : phonesFromDB) {
@@ -85,21 +101,22 @@ public class EditUserApiServlet extends HttpServlet {
                 }
             }
         }
-        newPhonesFromClient.addAll(phonesFromClient);
+        List<String> newPhonesFromClient = new ArrayList<>(phonesFromClient);
         newPhonesFromClient.removeAll(oldPhones);
         return newPhonesFromClient;
     }
 
     private void assertAndSetUserHomeAddress(HttpServletRequest request, User user) {
+        HomeAddress userHomeAddress = user.getHomeAddress();
         if (request.getParameter(PARAM_ADDRESS).equals("")) {
-            if (user.getHomeAddress() != null) {
-                user.getHomeAddress().setStreet("");
+            if (userHomeAddress != null) {
+                userHomeAddress.setStreet("");
             } else {
                 user.setHomeAddress(new HomeAddress(""));
             }
         } else {
-            if (user.getHomeAddress() != null) {
-                user.getHomeAddress().setStreet(request.getParameter(PARAM_ADDRESS));
+            if (userHomeAddress != null) {
+                userHomeAddress.setStreet(request.getParameter(PARAM_ADDRESS));
             } else {
                 user.setHomeAddress(new HomeAddress(request.getParameter(PARAM_ADDRESS)));
             }
@@ -123,6 +140,39 @@ public class EditUserApiServlet extends HttpServlet {
             if (user != null) {
                 user.setName(request.getParameter(PARAM_NAME));
             }
+        }
+    }
+
+    private void setUserPhones(HttpServletRequest request, User user) {
+        List<String> phones = new ArrayList<>();
+        Optional.ofNullable(request.getParameterValues(PARAM_PHONES))
+                .ifPresent(p -> Collections.addAll(phones, p));
+        for (String phone : phones) {
+            if (!phone.equals("")) {
+                user.addPhone(new PhoneDataSet(phone));
+            }
+        }
+    }
+
+    private void setUserHomeAddress(HttpServletRequest request, User user) {
+        if (!request.getParameter(PARAM_ADDRESS).equals("")) {
+            user.setHomeAddress(new HomeAddress(request.getParameter(PARAM_ADDRESS)));
+        }
+    }
+
+    private void setUserAge(HttpServletRequest request, User user) {
+        if (request.getParameter(PARAM_AGE).equals("")) {
+            user.setAge(0);
+        } else {
+            user.setAge(Integer.parseInt(request.getParameter(PARAM_AGE)));
+        }
+    }
+
+    private void setUserName(HttpServletRequest request, User user) {
+        if (request.getParameter(PARAM_NAME).equals("")) {
+            throw new MyServletException("User dont have a name!");
+        } else {
+            user.setName(request.getParameter(PARAM_NAME));
         }
     }
 

@@ -54,8 +54,8 @@
     }
 
     function increasePhones() {
-        var divPhoneNumber = document.getElementById("phoneNumber");
-        var divPhoneNumberContext = divPhoneNumber.outerHTML;
+        let divPhoneNumber = document.getElementById("phoneNumber");
+        let divPhoneNumberContext = divPhoneNumber.outerHTML;
         divPhoneNumber.outerHTML = "<p><input type=\"text\" name=\"phone\" id=\"phone\">" + divPhoneNumberContext
     }
 </script>
@@ -106,18 +106,18 @@
     <label for="address">Адрес</label>
     <input type="text" name="homeAddress" id="address" value="${address}">
 <p>
-    <a name="Phones"></a>
+    <a name="phones"></a>
     <label for="phone">Телефон</label>
     <#list phones as phone>
 <p>
     <input type="text" name="phone" id="phone" value="${phone}">
 </#list>
 <div id="phoneNumber"></div>
-<a href="#Phones" class="btn" onclick="increasePhones()">+</a>
+<a href="#phones" class="btn" onclick="increasePhones()">+</a>
 <input type="button" value="Сохранить" onclick="sendRequest()">
 </form>
 <p>
 <div id="responseContainer"></div>
-<a href="/#UsersTable" class="btn">Вернуться на главную</a>
+<a href="/" class="btn">Вернуться на главную</a>
 </body>
 </html>
