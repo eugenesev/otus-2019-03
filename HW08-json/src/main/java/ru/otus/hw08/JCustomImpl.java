@@ -6,71 +6,71 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 public class JCustomImpl implements JCustom {
-    private Object object;
 
     public String toJson(Object object) throws IllegalAccessException {
-        this.object = object;
-        List<Field> declaredFields = new ArrayList<>();
+        if (object == null) {
+            return "null";
+        }
 
         StringBuilder jFields = new StringBuilder();
         Class clazz = object.getClass();
-        Collections.addAll(declaredFields, clazz.getDeclaredFields());
-        int size = declaredFields.size();
-        for (int i = 0; i < size; i++) {
-            Field field = declaredFields.get(i);
-            if (i != 0)
-                jFields.append(",");
-            if (!isArray(field)) {
-                if (isSimpleField(field)) {
-                    jFields.append(addSimpleField(field));
-                } else {
-                    jFields.append(field.getName()).append(":").append(toJson(field.get(object)));
-                }
-            }
-            if (isArray(field)) {
-                jFields.append(addArray(field));
+
+        if (isSimpleType(clazz)) {
+            jFields.append(addSimple(object));
+        } else {
+            if (isArray(clazz)) {
+                jFields.append(addListOrArray(object));
+            } else {
+                jFields.append(addInstance(object));
             }
         }
-
-        String json = create(jFields).toString();
-
-        return json;
+        return jFields.toString();
     }
 
-    private StringBuilder create(StringBuilder element) {
-        StringBuilder json = new StringBuilder();
-        json.append("{").append(element).append("}");
-        return json;
-    }
-
-    private StringBuilder addSimpleField(Field field) throws IllegalAccessException {
-        StringBuilder json = new StringBuilder();
-        field.setAccessible(true);
-        json.append(field.getName()).append(":").append(field.get(object).toString());
-        return json;
-    }
-
-    private boolean isSimpleField(Field field) {
+    private boolean isSimpleType(Field field) {
         Class clazz = field.getType();
-        return isSimpleField(clazz);
+        return isSimpleType(clazz);
     }
 
-    private boolean isSimpleField(Class clazz) {
+    private boolean isSimpleType(Class clazz) {
         if (clazz.isPrimitive()) {
             return true;
         } else {
-            switch (clazz.getSimpleName()) {
-                case "String":
-                case "Integer":
-                case "Double":
-                case "Long":
-                case "Boolean":
-                    return true;
+            String className = clazz.getSimpleName();
+            if (className.equals(String.class.getSimpleName()) ||
+                    className.equals(Byte.class.getSimpleName()) ||
+                    className.equals(Short.class.getSimpleName()) ||
+                    className.equals(Integer.class.getSimpleName()) ||
+                    className.equals(Long.class.getSimpleName()) ||
+                    className.equals(Float.class.getSimpleName()) ||
+                    className.equals(Double.class.getSimpleName()) ||
+                    className.equals(Character.class.getSimpleName()) ||
+                    className.equals(Boolean.class.getSimpleName())) {
+                return true;
             }
         }
         return false;
     }
+
+    private StringBuilder addSimple(Field field, Object object) throws IllegalAccessException {
+        StringBuilder json = new StringBuilder();
+        field.setAccessible(true);
+        json.append("\"").append(field.getName()).append("\"").append(":")
+                .append(addSimple(field.get(object)));
+        return json;
+    }
+
+    private StringBuilder addSimple(Object object) {
+        StringBuilder json = new StringBuilder();
+        String className = object.getClass().getSimpleName();
+        if (className.equals(String.class.getSimpleName()) || className.equals(Character.class.getSimpleName())) {
+            return json.append("\"").append(object).append("\"");
+        }
+        return json.append(object);
+    }
+
 
     private boolean isArray(Field field) {
         Class clazz = field.getType();
@@ -78,32 +78,45 @@ public class JCustomImpl implements JCustom {
     }
 
     private boolean isArray(Class clazz) {
-        return clazz.isArray() || clazz.getSimpleName().equals("List");
+        return clazz.isArray() || List.class.isAssignableFrom(clazz);
     }
 
-    private StringBuilder addArray(Field field) throws IllegalAccessException {
+    private StringBuilder addArray(Field field, Object object) throws IllegalAccessException {
         StringBuilder json = new StringBuilder();
         field.setAccessible(true);
         Object array;
-        if (field.getType().getSimpleName().equals("List")) {
+        if (List.class.isAssignableFrom(field.getType())) {
             List list = (List) field.get(object);
             array = list.toArray();
         } else {
             array = field.get(object);
         }
-        return json.append(field.getName()).append(":").append(addArray(array));
+        return json.append("\"").append(field.getName()).append("\"").append(":")
+                .append(addArray(array));
+    }
+
+    private StringBuilder addListOrArray(Object object) throws IllegalAccessException {
+        StringBuilder json = new StringBuilder();
+        Object array;
+        if (List.class.isAssignableFrom(object.getClass())) {
+            List list = (List) object;
+            array = list.toArray();
+            return json.append(addArray(array));
+        }
+        return json.append(addArray(object));
     }
 
     private StringBuilder addArray(Object array) throws IllegalAccessException {
         StringBuilder json = new StringBuilder();
+
         int length = Array.getLength(array);
         json.append("[");
         for (int i = 0; i < length; i++) {
             if (i != 0)
                 json.append(",");
             if (!isArray(Array.get(array, i).getClass())) {
-                if (isSimpleField(Array.get(array, i).getClass())) {
-                    json.append(Array.get(array, i));
+                if (isSimpleType(Array.get(array, i).getClass())) {
+                    json.append(addSimple(Array.get(array, i)));
                 } else {
                     json.append(toJson(Array.get(array, i)));
                 }
@@ -115,4 +128,36 @@ public class JCustomImpl implements JCustom {
         json.append("]");
         return json;
     }
+
+    private StringBuilder addInstance(Object object) throws IllegalAccessException {
+        StringBuilder json = new StringBuilder();
+        List<Field> declaredFields = new ArrayList<>();
+        Class clazz = object.getClass();
+
+        Collections.addAll(declaredFields, clazz.getDeclaredFields());
+        int size = declaredFields.size();
+        for (int i = 0; i < size; i++) {
+            Field field = declaredFields.get(i);
+            if (i != 0)
+                json.append(",");
+            if (isArray(field)) {
+                json.append(addArray(field, object));
+            } else {
+                if (isSimpleType(field)) {
+                    json.append(addSimple(field, object));
+                } else {
+                    json.append("\"").append(field.getName()).append("\"").append(":")
+                            .append(addInstance(field.get(object)));
+                }
+            }
+        }
+        return create(json);
+    }
+
+    private StringBuilder create(StringBuilder element) {
+        StringBuilder json = new StringBuilder();
+        json.append("{").append(element).append("}");
+        return json;
+    }
+
 }
