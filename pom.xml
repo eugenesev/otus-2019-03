@@ -28,6 +28,7 @@
         <module>HW09-jdbc-template</module>
         <module>HW10-hibernate</module>
         <module>HW05-gc</module>
+        <module>HW14-threads</module>
 
     </modules>
 
