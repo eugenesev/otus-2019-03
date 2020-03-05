@@ -5,11 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class User {
-    Long id;
-    String name;
-    String[] strArr = {"q", "w", "e"};
-    List list = new ArrayList();
-    InnerObject object;
+    private Long id;
+    private String name;
+    private String[] strArr = {"q", "w", "e"};
+    private List list = new ArrayList();
+    private InnerObject object;
+    private static final String ANY_CONST = "aaaaaa";
+    private String nullStr = null;
 
     public User(long id, String name) {
         this.id = id;

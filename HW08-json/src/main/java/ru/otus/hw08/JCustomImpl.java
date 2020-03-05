@@ -2,6 +2,7 @@ package ru.otus.hw08;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,23 +36,17 @@ public class JCustomImpl implements JCustom {
     }
 
     private boolean isSimpleType(Class clazz) {
-        if (clazz.isPrimitive()) {
-            return true;
-        } else {
-            String className = clazz.getSimpleName();
-            if (className.equals(String.class.getSimpleName()) ||
-                    className.equals(Byte.class.getSimpleName()) ||
-                    className.equals(Short.class.getSimpleName()) ||
-                    className.equals(Integer.class.getSimpleName()) ||
-                    className.equals(Long.class.getSimpleName()) ||
-                    className.equals(Float.class.getSimpleName()) ||
-                    className.equals(Double.class.getSimpleName()) ||
-                    className.equals(Character.class.getSimpleName()) ||
-                    className.equals(Boolean.class.getSimpleName())) {
-                return true;
-            }
-        }
-        return false;
+
+        return clazz.isPrimitive() ||
+                clazz.equals(String.class) ||
+                clazz.equals(Byte.class) ||
+                clazz.equals(Short.class) ||
+                clazz.equals(Integer.class) ||
+                clazz.equals(Long.class) ||
+                clazz.equals(Float.class) ||
+                clazz.equals(Double.class) ||
+                clazz.equals(Character.class) ||
+                clazz.equals(Boolean.class);
     }
 
     private StringBuilder addSimple(Field field, Object object) throws IllegalAccessException {
@@ -133,21 +128,23 @@ public class JCustomImpl implements JCustom {
         StringBuilder json = new StringBuilder();
         List<Field> declaredFields = new ArrayList<>();
         Class clazz = object.getClass();
-
         Collections.addAll(declaredFields, clazz.getDeclaredFields());
         int size = declaredFields.size();
         for (int i = 0; i < size; i++) {
             Field field = declaredFields.get(i);
-            if (i != 0)
-                json.append(",");
-            if (isArray(field)) {
-                json.append(addArray(field, object));
-            } else {
-                if (isSimpleType(field)) {
-                    json.append(addSimple(field, object));
+            field.setAccessible(true);
+            if (field.get(object) != null && !Modifier.isStatic(field.getModifiers())) {
+                if (i != 0)
+                    json.append(",");
+                if (isArray(field)) {
+                    json.append(addArray(field, object));
                 } else {
-                    json.append("\"").append(field.getName()).append("\"").append(":")
-                            .append(addInstance(field.get(object)));
+                    if (isSimpleType(field)) {
+                        json.append(addSimple(field, object));
+                    } else {
+                        json.append("\"").append(field.getName()).append("\"").append(":")
+                                .append(addInstance(field.get(object)));
+                    }
                 }
             }
         }
