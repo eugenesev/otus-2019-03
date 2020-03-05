@@ -1,5 +1,6 @@
 package ru.otus.hw10;
 
+import com.google.gson.Gson;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ import ru.otus.hw10.hibernate.HibernateUtils;
 import ru.otus.hw10.hibernate.dao.UserDaoHibernate;
 import ru.otus.hw10.hibernate.sessionmanager.SessionManagerHibernate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class DbServiceDemo {
@@ -43,6 +46,14 @@ public class DbServiceDemo {
         user1.setHomeAddress(new HomeAddress("Лесная"));
         id = dbServiceUser.saveUser(user1);
         Optional<User> mayBeUpdatedUser = dbServiceUser.getUser(id);
+
+//        Gson gson = new Gson();
+//        String json = gson.toJson(mayBeUpdatedUser.get());
+//        System.out.println("RRRRR"+json);
+
+        List<User> list = dbServiceUser.getAllUsers();
+        User user = list.get(0);
+        System.out.println("KKKKK"+user.getAge());
 
         System.out.println(user1);
         outputUserOptional("Created user", mayBeCreatedUser);
