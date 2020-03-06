@@ -59,8 +59,8 @@ public class JCustomImpl implements JCustom {
 
     private StringBuilder addSimple(Object object) {
         StringBuilder json = new StringBuilder();
-        String className = object.getClass().getSimpleName();
-        if (className.equals(String.class.getSimpleName()) || className.equals(Character.class.getSimpleName())) {
+        Class clazz = object.getClass();
+        if (clazz.equals(String.class) || clazz.equals(Character.class)) {
             return json.append("\"").append(object).append("\"");
         }
         return json.append(object);
