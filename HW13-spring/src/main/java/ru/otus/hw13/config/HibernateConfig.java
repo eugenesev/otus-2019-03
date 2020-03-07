@@ -4,6 +4,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -53,12 +55,14 @@ public class HibernateConfig {
 //        sessionFactory.setHibernateProperties(hibernateProperties());
 //        return sessionFactory;
 //    }
-
+    @Autowired
     @Bean
-    public SessionFactory sessionFactory(){
+    public SessionFactory sessionFactory(DataSource dataSource){
         org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().mergeProperties(hibernateProperties());
         MetadataSources metadataSources = new MetadataSources(new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties()).build());
+                .applySettings(configuration.getProperties())
+                .applySetting(Environment.DATASOURCE, dataSource)
+                .build());
 
         Class[] annotatedClasses = new Class[]{User.class, HomeAddress.class, PhoneDataSet.class};
         Arrays.stream(annotatedClasses).forEach(metadataSources::addAnnotatedClass);
