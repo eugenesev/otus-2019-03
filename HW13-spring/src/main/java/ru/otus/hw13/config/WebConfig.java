@@ -13,8 +13,6 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
-import javax.sql.DataSource;
-
 @Configuration
 @ComponentScan(basePackages = "ru.otus.hw13")
 @EnableWebMvc
@@ -58,6 +56,4 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("/resources/WEB-INF/static/");
     }
-
-
 }

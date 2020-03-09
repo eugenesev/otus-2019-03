@@ -1,123 +1,104 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="user" type="ru.otus.hw13.domain.User"*/-->
 <head>
     <meta charset="UTF-8">
-    <#if user?has_content>
-    <title>Пользователь id=${user.id}</title>
-    <#else>
-    <title>Добавить юзера</title>
-    </#if>
-<script>
 
-    function sendRequest() {
-        let form = document.forms[0];
-        let id = form.getAttribute('id');
-        let api = "";
-        let method = "";
 
-        if (id == "addForm") {
-            api = "/api/users?";
-            method = 'POST'
-        }
+    <title th:text="${user}? '\'Пользователь id=' + ${user.id} + '\'':'Добавить юзера'">Пользователь id=1</title>
 
-        let userId = form.elements.id.value;
-        if (id == "editForm") {
-            api = "/api/users?id=" + userId + "&";
-            method = 'PUT'
-        }
+    <script>
 
-        let phones = "";
-        if(form.elements.phone){
-            let phonesArr = form.elements.phone;
-            if (phonesArr.length > 0) {
-                for (let i = 0; i < phonesArr.length; i++) {
-                    phones += "&phone=" + phonesArr[i].value;
+        function sendRequest() {
+            let form = document.forms[0];
+            let id = form.getAttribute('id');
+            let api = "";
+            let method = "";
+
+            if (id == "addForm") {
+                api = '/api/users?';
+                method = 'POST'
+            }
+
+            let userId = form.elements.id.value;
+            if (id == "editForm") {
+                api = "/api/users?id=" + userId + "&";
+                method = 'PUT'
+            }
+
+            let phones = "";
+            if (form.elements.phone) {
+                let phonesArr = form.elements.phone;
+                if (phonesArr.length > 0) {
+                    for (let i = 0; i < phonesArr.length; i++) {
+                        phones += "&phone=" + phonesArr[i].value;
+                    }
+                } else {
+                    if (phonesArr != null) {
+                        phones += "&phone=" + phonesArr.value;
+                    } else {
+                        phones += "&phone=";
+                    }
                 }
             }
-            else {
-                if (phonesArr != null) {
-                    phones += "&phone=" + phonesArr.value;
-                }else {
-                    phones += "&phone=";
-                }
-            }
+
+            let name = form.elements.name.value;
+            let age = form.elements.age.value;
+            let address = form.elements.homeAddress.value;
+
+            let responseContainer = document.getElementById("responseContainer");
+            fetch('http://localhost:8080/HW13_spring_war_exploded' + api + 'name=' + name + "&" + "age=" + age + "&" + "homeAddress=" + address + phones, {method: method})
+                .then(response => response.text())
+                .then(response => responseContainer.textContent = response);
         }
 
-        let name = form.elements.name.value;
-        let age = form.elements.age.value;
-        let address = form.elements.homeAddress.value;
+        function increasePhones() {
+            let divPhoneNumber = document.getElementById("phoneNumber");
+            let divPhoneNumberContext = divPhoneNumber.outerHTML;
+            divPhoneNumber.outerHTML = "<p><input type=\"text\" name=\"phone\" id=\"phone\">" + divPhoneNumberContext
+        }
+    </script>
 
-        let responseContainer = document.getElementById("responseContainer");
-        fetch(api + 'name=' + name + "&" + "age=" + age + "&" + "homeAddress=" + address + phones, {method: method})
-            .then(response => response.text())
-            .then(response => responseContainer.textContent = response);
-    }
-
-    function increasePhones() {
-        let divPhoneNumber = document.getElementById("phoneNumber");
-        let divPhoneNumberContext = divPhoneNumber.outerHTML;
-        divPhoneNumber.outerHTML = "<p><input type=\"text\" name=\"phone\" id=\"phone\">" + divPhoneNumberContext
-    }
-</script>
-
-<style>
-    .btn {
-        display: inline-block; /* Строчно-блочный элемент */
-        background: #8C959D; /* Серый цвет фона */
-        color: #fff; /* Белый цвет текста */
-        padding: 1rem 1.5rem; /* Поля вокруг текста */
-        text-decoration: none; /* Убираем подчёркивание */
-        border-radius: 3px; /* Скругляем уголки */
-    }
-</style>
+    <style>
+        .btn {
+            display: inline-block; /* Строчно-блочный элемент */
+            background: #8C959D; /* Серый цвет фона */
+            color: #fff; /* Белый цвет текста */
+            padding: 1rem 1.5rem; /* Поля вокруг текста */
+            text-decoration: none; /* Убираем подчёркивание */
+            border-radius: 3px; /* Скругляем уголки */
+        }
+    </style>
 
 </head>
 <body>
 
-<#if user?has_content>
-<form action="" id="editForm">
-    <#else>
-    <form action="" id="addForm">
-    </#if>
-    <#if user?has_content>
-    <#assign id = user.id>
-    <#assign name = user.name>
-    <#assign age = user.age>
-    <#if user.homeAddress?has_content>
-    <#assign address = user.homeAddress.street>
-    <#else>
-    <#assign address = "">
-</#if>
-<#assign phones = phones>
-<#else>
-<#assign id = "">
-<#assign name = "">
-<#assign age = 0>
-<#assign address = "">
-<#assign phones = []>
-</#if>
-<input type="hidden" name="id" value="${id}">
-<label for="name">Имя</label>
-<input type="text" name="name" id="name" value="${name}">
-<p>
-    <label for="age">Возраст</label>
-    <input type="text" name="age" id="age" value="${age}">
-<p>
-    <label for="address">Адрес</label>
-    <input type="text" name="homeAddress" id="address" value="${address}">
-<p>
-    <a name="phones"></a>
-    <label for="phone">Телефон</label>
-    <#list phones as phone>
-<p>
-    <input type="text" name="phone" id="phone" value="${phone}">
-</#list>
-<div id="phoneNumber"></div>
-<a href="#phones" class="btn" onclick="increasePhones()">+</a>
-<input type="button" value="Сохранить" onclick="sendRequest()">
+<form th:action="@{'/api/users'}" th:id="${user}? 'editForm': 'addForm'" th:object="${user}"th:method="POST" accept-charset="utf-8">
+    <input type="hidden" name="id" th:value="${user}? ${user.id}">
+    <label for="name">Имя</label>
+    <input type="text" name="name" id="name" th:value="${user}? ${user.name}" value="Вася">
+    <p>
+        <label for="age">Возраст</label>
+        <input type="text" name="age" id="age" th:value="${user}? ${user.age}" value="20">
+    <p>
+        <label for="address">Адрес</label>
+        <input type="text" name="homeAddress" id="address" th:value="${user}? ${user.getHomeAddress().getStreet()}"
+               value="Садовая">
+    <p>
+        <a id="phones"></a>
+        <label for="phone">Телефон</label>
+    <div th:if="${user != null}">
+    <p th:each="phone : ${user.getPhone()}">
+        <input type="text" name="phone" id="phone" th:value="${phone.getNumber()}">
+    </p>
+    </div>
+    <div id="phoneNumber"></div>
+    <a href="#phones" class="btn" onclick="increasePhones()">+</a>
+    <input type="button" value="Сохранить" onclick="sendRequest()">
+    <button type="submit">Save</button>
 </form>
 <p>
 <div id="responseContainer"></div>
-<a href="/" class="btn">Вернуться на главную</a>
+<a th:href="@{'/'}" class="btn">Вернуться на главную</a>
 </body>
 </html>

@@ -30,10 +30,10 @@ public class HibernateConfig {
 
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        properties.put("hibernate.show_sql", "true");
-        properties.put("hibernate.hbm2ddl.auto", "create");
-        properties.put("hibernate.enable_lazy_load_no_trans", "false");
+        properties.put(Environment.DIALECT, "org.hibernate.dialect.H2Dialect");
+        properties.put(Environment.SHOW_SQL, "true");
+        properties.put(Environment.HBM2DDL_AUTO, "create");
+        properties.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, "false");
         return properties;
     }
 
@@ -47,14 +47,6 @@ public class HibernateConfig {
         return dataSource;
     }
 
-//    @Bean
-//    public LocalSessionFactoryBean sessionFactory() {
-//        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-//        sessionFactory.setDataSource(dataSource());
-//        sessionFactory.setPackagesToScan("ru.otus.hw13.domain");
-//        sessionFactory.setHibernateProperties(hibernateProperties());
-//        return sessionFactory;
-//    }
     @Autowired
     @Bean
     public SessionFactory sessionFactory(DataSource dataSource){
@@ -71,7 +63,15 @@ public class HibernateConfig {
         return metadata.getSessionFactoryBuilder().build();
     }
 
-
+    //    @Bean
+//    public LocalSessionFactoryBean sessionFactory() {
+//        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+//        sessionFactory.setDataSource(dataSource());
+//        sessionFactory.setPackagesToScan("ru.otus.hw13.domain");
+//        sessionFactory.setHibernateProperties(hibernateProperties());
+//        return sessionFactory;
+//    }
+//
 //    @Bean
 //    public HibernateTransactionManager transactionManager() {
 //        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
