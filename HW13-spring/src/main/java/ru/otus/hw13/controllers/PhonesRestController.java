@@ -30,7 +30,8 @@ public class PhonesRestController {
             user.getPhone().forEach(phone -> phones.add(phone.getNumber()));
             return phones;
         } else {
-           return (List<String>) Collections.singleton("No Number");
+            phones.addAll(Collections.singleton("No Number"));
+            return phones;
         }
     }
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html >
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="user" type="ru.otus.hw13.domain.User"*/-->
 <head>
@@ -7,7 +7,7 @@
 
     <title th:text="${user}? '\'Пользователь id=' + ${user.id} + '\'':'Добавить юзера'">Пользователь id=1</title>
 
-    <script>
+    <script th:inline="javascript">
 
         function sendRequest() {
             let form = document.forms[0];
@@ -16,13 +16,13 @@
             let method = "";
 
             if (id == "addForm") {
-                api = '/api/users?';
+                api = [[@{'/api/users?'}]];
                 method = 'POST'
             }
 
             let userId = form.elements.id.value;
             if (id == "editForm") {
-                api = "/api/users?id=" + userId + "&";
+                api = [[@{'/api/users?id='}]] + userId + "&";
                 method = 'PUT'
             }
 
@@ -44,11 +44,13 @@
 
             let name = form.elements.name.value;
             let age = form.elements.age.value;
+            if(age===""){age="0"}
             let address = form.elements.homeAddress.value;
 
             let responseContainer = document.getElementById("responseContainer");
-            fetch('http://localhost:8080/HW13_spring_war_exploded' + api + 'name=' + name + "&" + "age=" + age + "&" + "homeAddress=" + address + phones, {method: method})
+            fetch(api + 'name=' + name + "&" + "age=" + age + "&" + "homeAddress=" + address + phones, {method: method})
                 .then(response => response.text())
+                .then(response => (response.status=='404')? responseContainer.textContent = "dgdsfg":responseContainer.textContent = response)
                 .then(response => responseContainer.textContent = response);
         }
 
@@ -60,6 +62,13 @@
     </script>
 
     <style>
+        input:invalid {
+            border: 2px dashed red;
+        }
+
+        input:valid {
+            border: 2px solid black;
+        }
         .btn {
             display: inline-block; /* Строчно-блочный элемент */
             background: #8C959D; /* Серый цвет фона */
@@ -76,10 +85,10 @@
 <form th:action="@{'/api/users'}" th:id="${user}? 'editForm': 'addForm'" th:object="${user}"th:method="POST" accept-charset="utf-8">
     <input type="hidden" name="id" th:value="${user}? ${user.id}">
     <label for="name">Имя</label>
-    <input type="text" name="name" id="name" th:value="${user}? ${user.name}" value="Вася">
+    <input type="text" name="name" id="name" th:value="${user}? ${user.name}" value="Вася" required>
     <p>
         <label for="age">Возраст</label>
-        <input type="text" name="age" id="age" th:value="${user}? ${user.age}" value="20">
+        <input type="number" name="age" id="age" th:value="${user}? ${user.age}" value="20" min="0" max="200" step="1">
     <p>
         <label for="address">Адрес</label>
         <input type="text" name="homeAddress" id="address" th:value="${user}? ${user.getHomeAddress().getStreet()}"

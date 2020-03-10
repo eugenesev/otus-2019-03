@@ -30,88 +30,65 @@ public class UsersRestController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/api/users")
-    protected String userUpdate(@ModelAttribute User user, @ModelAttribute ArrayList<PhoneDataSet> phoneDataSet, @ModelAttribute HomeAddress homeAddress) throws IOException {
-
+    protected String userUpdate(@ModelAttribute User user) {
         User newUser = new User();
-        setUserName(user.getName(), newUser);
-        setUserAge(user.getAge(), newUser);
-        setUserHomeAddress(homeAddress, user);
-        newUser.setPhone(phoneDataSet);
-//        setUserPhones(request, user);
-
-        dbServiceUser.saveUser(newUser);
-        return "Готово!";
-
-    }
-
-//    @RequestMapping(method = RequestMethod.PUT, value = "/api/users")
-//    protected String userSave() throws IOException {
-//        long id = Long.parseLong(request.getParameter(PARAM_ID));
-//        User user = dbServiceUser.getUser(id).orElse(null);
-//
-//        assertAndSetUserName(request, user);
-//        assertAndSetUserAge(request, user);
-//        assertAndSetUserHomeAddress(request, user);
-//        assertAndSetUserPhones(request, user);
-//
-//        dbServiceUser.saveUser(user);
-//        response.setContentType("text/html;charset=UTF-8");
-//        ServletOutputStream out = response.getOutputStream();
-//        out.print("Готово!");
-//
-//    }
-
-//    private void assertAndSetUserAge(HttpServletRequest request, User user) {
-//        if (request.getParameter(PARAM_AGE).equals("")) {
-//            assert user != null;
-//            user.setAge(0);
-//        } else {
-//            assert user != null;
-//            user.setAge(Integer.parseInt(request.getParameter(PARAM_AGE)));
-//        }
-//    }
-//
-//    private void assertAndSetUserName(HttpServletRequest request, User user) {
-//        if (request.getParameter(PARAM_NAME).equals("")) {
-//            throw new MyServletException("User dont have a name!");
-//        } else {
-//            if (user != null) {
-//                user.setName(request.getParameter(PARAM_NAME));
-//            }
-//        }
-//    }
-//
-//    private void setUserPhones(HttpServletRequest request, User user) {
-//        List<String> phones = new ArrayList<>();
-//        Optional.ofNullable(request.getParameterValues(PARAM_PHONES))
-//                .ifPresent(p -> Collections.addAll(phones, p));
-//        for (String phone : phones) {
-//            if (!phone.equals("")) {
-//                user.addPhone(new PhoneDataSet(phone));
-//            }
-//        }
-//    }
-
-    private void setUserHomeAddress(HomeAddress address, User newUser) {
-        if (!address.equals(null)) {
-            newUser.setHomeAddress(address);
-        }
-    }
-
-    private void setUserAge(Integer age, User newUser) {
-        if (age == null) {
-            newUser.setAge(0);
-        } else {
-            newUser.setAge(age);
-        }
-    }
-
-    private void setUserName(String name, User newUser) {
-        if (name.equals("")) {
+        if (user.getName().equals("")) {
             throw new MyServletException("User dont have a name!");
         } else {
-            newUser.setName(name);
+            newUser.setName(user.getName());
         }
+        newUser.setAge(user.getAge());
+        newUser.setHomeAddress(user.getHomeAddress());
+        for (PhoneDataSet phone : user.getPhone()) {
+            if (!phone.getNumber().equals("")) {
+                newUser.addPhone(phone);
+            }
+        }
+        dbServiceUser.saveUser(newUser);
+        return "User Saved!";
     }
 
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/users")
+    protected String userSave(@ModelAttribute User user, HttpServletRequest request) throws IOException {
+
+        User savingUser = dbServiceUser.getUser(Integer.parseInt(request.getParameter("id"))).orElse(null);
+
+        savingUser.setName(user.getName());
+        savingUser.setAge(user.getAge());
+        savingUser.getHomeAddress().setStreet(user.getHomeAddress().getStreet());
+        assertAndSetUserPhones(user, savingUser);
+        dbServiceUser.saveUser(user);
+        return "User Saved!";
+
+    }
+    private void assertAndSetUserPhones(User user, User newUser) {
+        List<PhoneDataSet> phonesFromClient = user.getPhone();
+        List<PhoneDataSet> phonesFromDB = newUser.getPhone();
+
+        List<PhoneDataSet> newPhonesFromClient = findNewPhones(phonesFromClient, phonesFromDB);
+
+        for (PhoneDataSet dbPhone : phonesFromDB) {
+            if (!phonesFromClient.contains(dbPhone)) {
+                if (!newPhonesFromClient.get(0).getNumber().equals("")) {
+                    dbPhone.setNumber(newPhonesFromClient.get(0).getNumber());
+                    newPhonesFromClient.remove(0);
+                }
+            }
+        }
+    }
+    private List<PhoneDataSet> findNewPhones(List<PhoneDataSet> phonesFromClient, List<PhoneDataSet> phonesFromDB) {
+        List<PhoneDataSet> oldPhones = new ArrayList<>();
+        for (PhoneDataSet clPhone : phonesFromClient) {
+            if (!clPhone.getNumber().equals("")) {
+                for (PhoneDataSet dbPhone : phonesFromDB) {
+                    if (dbPhone.getNumber().equals(clPhone.getNumber())) {
+                        oldPhones.add(clPhone);
+                    }
+                }
+            }
+        }
+        List<PhoneDataSet> newPhonesFromClient = new ArrayList<>(phonesFromClient);
+        newPhonesFromClient.removeAll(oldPhones);
+        return newPhonesFromClient;
+    }
 }
