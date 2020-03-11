@@ -50,7 +50,6 @@
             let responseContainer = document.getElementById("responseContainer");
             fetch(api + 'name=' + name + "&" + "age=" + age + "&" + "homeAddress=" + address + phones, {method: method})
                 .then(response => response.text())
-                .then(response => (response.status=='404')? responseContainer.textContent = "dgdsfg":responseContainer.textContent = response)
                 .then(response => responseContainer.textContent = response);
         }
 

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import ru.otus.hw13.api.service.DBServiceUser;
 import ru.otus.hw13.domain.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
