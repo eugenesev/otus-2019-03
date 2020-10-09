@@ -4,21 +4,22 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Demo {
     public static void main(String[] args) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        System.out.println("________Без логгера________");
         ClassInterface c1 = new ClassImpl();
         c1.calculation(6);
         c1.calculation(5,7);
-// Можно использовать статический метод
-        ClassInterface c2;
-        c2 = LogRunner.log(c1);
-        c2.calculation(7);
-        c2.calculation(4,4);
-// Можно передать в конструктор либо объект, либо класс логируемого объекта
-        ClassInterface c3 = new ClassImpl();
-        new LogRunner(c3).log().calculation(5);
-        new LogRunner(c3).log().calculation(5,5);
 
-        new LogRunner(ClassImpl.class).log().calculation(5,8);
-        new LogRunner(ClassImpl.class).log().calculation(8);
+        System.out.println("______С логгированием______");
+        ClassInterface c3 = new ClassImpl();
+        new LogRunner<>(c3).log().calculation(5);
+        new LogRunner<>(c3).log().calculation(5,5);
+
+        c3 = new LogRunner<>(c3).log();
+        c3.calculation(7,9);
+
+
+//        ClassInterface c4 = new LogRunner<ClassInterface>(ClassImpl.class).log(c3);
+//        c4.calculation(4,5);
 
     }
 }

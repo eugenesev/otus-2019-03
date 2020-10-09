@@ -4,30 +4,30 @@ import java.lang.reflect.*;
 import java.util.Arrays;
 
 
-public class LogRunner {
+public class LogRunner<T> {
 
 
-    private final ClassInterface loggedObject;
+    private final T loggedObject;
 
-    public LogRunner(ClassInterface loggedObject) {
+    public LogRunner(T loggedObject) {
         this.loggedObject = loggedObject;
     }
 
-    public LogRunner(Class loggedObjectClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor[] constructors = loggedObjectClass.getDeclaredConstructors();
-        Constructor constructor = constructors[0];
-        loggedObject = (ClassInterface) constructor.newInstance();
+//    public LogRunner(Class loggedObjectClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+//        Constructor[] constructors = loggedObjectClass.getDeclaredConstructors();
+//        Constructor constructor = constructors[0];
+//        loggedObject = (T) constructor.newInstance();
+//    }
+
+
+    public T log() {
+        return (T) log(loggedObject);
+
     }
 
-
-    public ClassInterface log() {
-        return LogRunner.log(loggedObject);
-
-    }
-
-    public static ClassInterface log(Object loggedObject) {
+    public T log(Object loggedObject) {
         InvocationHandler handler = new CustomInvocationHandler(loggedObject);
-        return (ClassInterface) Proxy.newProxyInstance(loggedObject.getClass().getClassLoader(), new Class[]{ClassInterface.class}, handler);
+        return (T) Proxy.newProxyInstance(loggedObject.getClass().getClassLoader(), loggedObject.getClass().getInterfaces(), handler);
     }
 
 
