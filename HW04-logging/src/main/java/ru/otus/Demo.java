@@ -17,9 +17,5 @@ public class Demo {
         c3 = new LogRunner<>(c3).log();
         c3.calculation(7,9);
 
-
-//        ClassInterface c4 = new LogRunner<ClassInterface>(ClassImpl.class).log(c3);
-//        c4.calculation(4,5);
-
     }
 }

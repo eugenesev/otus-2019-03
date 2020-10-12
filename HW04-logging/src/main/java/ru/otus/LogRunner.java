@@ -25,7 +25,7 @@ public class LogRunner<T> {
 
     }
 
-    public T log(Object loggedObject) {
+    private T log(Object loggedObject) {
         InvocationHandler handler = new CustomInvocationHandler(loggedObject);
         return (T) Proxy.newProxyInstance(loggedObject.getClass().getClassLoader(), loggedObject.getClass().getInterfaces(), handler);
     }
