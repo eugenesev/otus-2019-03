@@ -14,7 +14,6 @@ public class Withdraw implements Operation {
 
     private int consumerCash;
     private float clientBalance;
-    private int consumerBalance;
     private Map<Notes, Integer> consumerCashBundle;
     private ATM atm;
 
@@ -51,7 +50,6 @@ public class Withdraw implements Operation {
         }
         this.atm = atm;
         consumerCashBundle = atm.getConsumerCashBundle().getCashBox();
-//        consumerBalance = atm.getConsumerCashBundle().getBalance();
     }
 
     @Override

@@ -64,12 +64,6 @@ public class ATMRunner {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-//        atmImpl.choiceOperation(new Balance());
-//        atmImpl.choiceOperation(new Deposit());
-//        atmImpl.choiceOperation(new Withdraw());
-//        atmImpl.choiceOperation(new Balance());
     }
 
 }

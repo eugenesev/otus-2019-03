@@ -14,10 +14,6 @@ public class WithdrawValueAsker {
         this.out = out;
     }
 
-//    public static void main(String[] args) {
-//        getWithdrawValueFromUser(new WithdrawValueAsker(System.in, System.out));
-//    }
-
     public static int getWithdrawValueFromUser(WithdrawValueAsker asker) {
         int input = asker.ask("Enter value");
         while (input < 50)
