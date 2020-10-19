@@ -6,11 +6,17 @@ import ru.otus.hw06.money.ConsumerCashBundle;
 import ru.otus.hw06.operations.Balance;
 import ru.otus.hw06.operations.Deposit;
 import ru.otus.hw06.operations.Withdraw;
+import ru.otus.hw09.api.model.Account;
+import ru.otus.hw09.jdbc.service.AccountService;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ATMRunner {
+
+    private static final String URL = "jdbc:h2:mem:";
 
     public static void main(String[] args) throws IOException, IllegalAccessException, NoSuchFieldException, SQLException {
 
@@ -23,7 +29,7 @@ public class ATMRunner {
                 .oneHundred(0)
                 .fifty(0)
                 .build();
-        ATMImpl atmImpl = new ATMImpl(1, atmCashBox);
+
 
         ConsumerCashBundle consumerCashBundle = ConsumerCashBundle.set()
                 .fiveThousand(1)
@@ -34,11 +40,35 @@ public class ATMRunner {
                 .oneHundred(3)
                 .fifty(2)
                 .build();
-        atmImpl.putConsumerCashBundle(consumerCashBundle);
 
-        atmImpl.choiceOperation(new Balance());
+        try (Connection connection = DriverManager.getConnection(URL)) {
+            connection.setAutoCommit(false);
+
+            AccountService accountService = new AccountService(connection);
+            accountService.createTableAccount();
+            accountService.saveAccount(new Account(0, "CardMir", 100_000f));
+            accountService.saveAccount(new Account(0, "MasterCard", 5_000.50f));
+            accountService.saveAccount(new Account(0, "CardMaestro", 123_456.7f));
+
+            ATMImpl atmImpl = new ATMImpl(1, atmCashBox);
+            atmImpl.insertClientCard(2);
+            atmImpl.setConnection(connection);
+            atmImpl.choiceOperation(new Balance());
+            atmImpl.putConsumerCashBundle(consumerCashBundle);
+            atmImpl.choiceOperation(new Deposit());
+            atmImpl.choiceOperation(new Balance());
+            atmImpl.choiceOperation(new Withdraw());
+            atmImpl.choiceOperation(new Balance());
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+//        atmImpl.choiceOperation(new Balance());
 //        atmImpl.choiceOperation(new Deposit());
-        atmImpl.choiceOperation(new Withdraw());
+//        atmImpl.choiceOperation(new Withdraw());
 //        atmImpl.choiceOperation(new Balance());
     }
 

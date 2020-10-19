@@ -143,7 +143,7 @@ public class Department implements ATMDepartment {
         long overallBalance = 0;
         ATM currentATM = atm;
         while (currentATM != null) {
-            overallBalance += currentATM.getBalance();
+            overallBalance += currentATM.getATMCashBoxBalance();
             currentATM = currentATM.getNextATM();
         }
         System.out.println("Overall balance: " + overallBalance);
