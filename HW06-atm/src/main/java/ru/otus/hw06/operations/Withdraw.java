@@ -19,10 +19,9 @@ public class Withdraw implements Operation {
 
     @Override
     public void execute(ATM atm) throws IOException, IllegalAccessException, NoSuchFieldException, SQLException {
-        WithdrawValueAsker asker = new WithdrawValueAsker(System.in, System.out);
         System.out.println("Withdrawing cash");
         int atmBalance = atm.getAtmCashBox().getBalance();
-        int cashValue = asker.getWithdrawValueFromUser();
+        int cashValue = WithdrawValueAsker.getWithdrawValueFromUser(new ValueAsker(System.in, System.out));
         if (atmBalance - cashValue >= 0) {
                 Connection connection = atm.getConnection();
                 AccountService accountService = new AccountService(connection);
