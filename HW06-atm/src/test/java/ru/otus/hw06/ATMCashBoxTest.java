@@ -60,4 +60,13 @@ public class ATMCashBoxTest {
         atmCashBox.credit(50);
         assertEquals(8800, atmCashBox.getBalance());
     }
+
+    @Test
+    @DisplayName("Снятие средств")
+    public void creditTest2(){
+        atmCashBox.credit(50);
+        atmCashBox.credit(50);
+        assertEquals(8750, atmCashBox.getBalance());
+    }
+
 }
