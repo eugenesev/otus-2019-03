@@ -39,6 +39,14 @@ public class User {
         this.name = name;
     }
 
+    public InnerObject getObject() {
+        return object;
+    }
+
+    public void setObject(InnerObject object) {
+        this.object = object;
+    }
+
     @Override
     public String toString() {
         return "User{" +

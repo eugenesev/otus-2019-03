@@ -10,7 +10,7 @@ import java.util.List;
 
 public class JCustomImpl implements JCustom {
 
-    public String toJson(Object object) throws IllegalAccessException {
+    public String toJson(Object object) {
         if (object == null) {
             return "null";
         }
@@ -49,11 +49,10 @@ public class JCustomImpl implements JCustom {
                 clazz.equals(Boolean.class);
     }
 
-    private StringBuilder addSimple(Field field, Object object) throws IllegalAccessException {
+    private StringBuilder addSimple(Field field, Object object) {
         StringBuilder json = new StringBuilder();
-        field.setAccessible(true);
         json.append("\"").append(field.getName()).append("\"").append(":")
-                .append(addSimple(field.get(object)));
+                .append(addSimple(getValueFromField(field, object)));
         return json;
     }
 
@@ -76,21 +75,20 @@ public class JCustomImpl implements JCustom {
         return clazz.isArray() || List.class.isAssignableFrom(clazz);
     }
 
-    private StringBuilder addArray(Field field, Object object) throws IllegalAccessException {
+    private StringBuilder addArray(Field field, Object object) {
         StringBuilder json = new StringBuilder();
-        field.setAccessible(true);
         Object array;
         if (List.class.isAssignableFrom(field.getType())) {
-            List list = (List) field.get(object);
+            List list = (List) getValueFromField(field, object);
             array = list.toArray();
         } else {
-            array = field.get(object);
+            array = getValueFromField(field, object);
         }
         return json.append("\"").append(field.getName()).append("\"").append(":")
                 .append(addArray(array));
     }
 
-    private StringBuilder addListOrArray(Object object) throws IllegalAccessException {
+    private StringBuilder addListOrArray(Object object) {
         StringBuilder json = new StringBuilder();
         Object array;
         if (List.class.isAssignableFrom(object.getClass())) {
@@ -101,7 +99,7 @@ public class JCustomImpl implements JCustom {
         return json.append(addArray(object));
     }
 
-    private StringBuilder addArray(Object array) throws IllegalAccessException {
+    private StringBuilder addArray(Object array) {
         StringBuilder json = new StringBuilder();
 
         int length = Array.getLength(array);
@@ -124,7 +122,7 @@ public class JCustomImpl implements JCustom {
         return json;
     }
 
-    private StringBuilder addInstance(Object object) throws IllegalAccessException {
+    private StringBuilder addInstance(Object object) {
         StringBuilder json = new StringBuilder();
         List<Field> declaredFields = new ArrayList<>();
         Class clazz = object.getClass();
@@ -132,8 +130,7 @@ public class JCustomImpl implements JCustom {
         int size = declaredFields.size();
         for (int i = 0; i < size; i++) {
             Field field = declaredFields.get(i);
-            field.setAccessible(true);
-            if (field.get(object) != null && !Modifier.isStatic(field.getModifiers())) {
+            if (getValueFromField(field, object) != null && !Modifier.isStatic(field.getModifiers())) {
                 if (i != 0)
                     json.append(",");
                 if (isArray(field)) {
@@ -143,12 +140,25 @@ public class JCustomImpl implements JCustom {
                         json.append(addSimple(field, object));
                     } else {
                         json.append("\"").append(field.getName()).append("\"").append(":")
-                                .append(addInstance(field.get(object)));
+                                .append(addInstance(getValueFromField(field, object)));
                     }
                 }
             }
         }
         return create(json);
+    }
+
+    private Object getValueFromField(Field field, Object object) {
+        Boolean accessible = field.isAccessible();
+        try {
+            field.setAccessible(true);
+            return field.get(object);
+        } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
+            return null;
+        } finally {
+            field.setAccessible(accessible);
+        }
     }
 
     private StringBuilder create(StringBuilder element) {
