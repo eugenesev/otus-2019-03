@@ -5,7 +5,7 @@
 
 Работа должна использовать базу данных H2.
 
-Возьмите за основу предыдущее ДЗ ([Самодельный ORM](https://github.com/eugenesev/otus-2019-03/tree/master/HW10-hibernate))
+Возьмите за основу предыдущее ДЗ ([Самодельный ORM](https://github.com/eugenesev/otus-2019-03/tree/master/HW09-jdbc-template))
 и реализуйте функционал сохранения и чтения объекта User через Hibernate.
 (Рефлейсия больше не нужна)
 
