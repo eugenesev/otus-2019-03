@@ -1,6 +1,5 @@
 package ru.otus.hw10.hibernate.service;
 
-import org.hibernate.ScrollableResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw10.api.dao.UserDao;
@@ -9,9 +8,6 @@ import ru.otus.hw10.api.service.DBServiceUser;
 import ru.otus.hw10.api.exceptions.DbServiceException;
 import ru.otus.hw10.api.sessionmanager.SessionManager;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 

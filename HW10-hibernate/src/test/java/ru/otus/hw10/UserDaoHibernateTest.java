@@ -27,9 +27,7 @@ public class UserDaoHibernateTest {
 
     private SessionManagerHibernate sessionManagerHibernate;
     private UserDaoHibernate userDaoHibernate;
-
-
-    protected SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     @BeforeEach
     public void setUp() {
