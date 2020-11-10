@@ -11,10 +11,12 @@
 
 Конфигурация Hibernate должна быть вынесена в файл.
 Добавьте в User поля:
+
 адрес (OneToOne)
   `class AddressDataSet {
   private String street;
   }`
+  
 и телефон (OneToMany)
   `class PhoneDataSet {
   private String number;
