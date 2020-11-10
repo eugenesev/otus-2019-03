@@ -12,13 +12,13 @@
 Конфигурация Hibernate должна быть вынесена в файл.
 Добавьте в User поля:
 адрес (OneToOne)
-`class AddressDataSet {
-private String street;
-}`
+  `class AddressDataSet {
+  private String street;
+  }`
 и телефон (OneToMany)
-`class PhoneDataSet {
-private String number;
-}`
+  `class PhoneDataSet {
+  private String number;
+  }`
 
 Разметьте классы таким образом, чтобы при сохранении/чтении объека User каскадно сохранялись/читались вложенные объекты.
 Не забывайте про сохранение абстракций в приложении (см. комментарий в вебинаре).
