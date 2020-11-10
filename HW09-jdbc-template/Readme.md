@@ -19,10 +19,10 @@ JdbcTemplate должен сохранять объект в базу и чит�
 Имя таблицы должно соответствовать имени класса, а поля класса - это колонки в таблице.
 
 Методы JdbcTemplate'а:
-void create(T objectData);
-void update(T objectData);
-void createOrUpdate(T objectData); // опционально.
-<T> T load(long id, Class<T> clazz);
+`void create(T objectData)`;
+`void update(T objectData)`;
+`void createOrUpdate(T objectData)`; // опционально.
+`<T> T load(long id, Class<T> clazz)`;
 Фактически, надо создать "генератор запросов".
 Сгенерированные запросы должны выполняться в уже готовом DbExecutor.
 
@@ -33,12 +33,14 @@ void createOrUpdate(T objectData); // опционально.
 Он должен "проверять" наличие объекта в таблице и создавать новый или обновлять.
 
 Создайте еще одну таблицу Account:
-• no bigint(20) NOT NULL auto_increment
-• type varchar(255)
-• rest number
+- no bigint(20) NOT NULL auto_increment
+- type varchar(255)
+- rest number
 
 Создайте для этой таблицы класс Account и проверьте работу JdbcTemplate на этом классе.
 
 -----
 И еще одна опция (по желанию для супер-мега крутых бизонов):
 прикрутите этот "jdbc-фреймворк" к [департаменту ATM](https://github.com/eugenesev/otus-2019-03/tree/master/HW06-atm).
+
+[![Структура проекта в IDEA](https://github.com/eugenesev/otus-2019-03/blob/master/img/HW-9.png)](https://github.com/eugenesev/otus-2019-03/tree/master/HW09-jdbc-template)
