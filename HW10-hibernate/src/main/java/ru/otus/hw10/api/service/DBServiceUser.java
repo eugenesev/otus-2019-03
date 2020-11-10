@@ -1,6 +1,5 @@
 package ru.otus.hw10.api.service;
 
-import org.hibernate.ScrollableResults;
 import ru.otus.hw10.api.model.User;
 
 import java.util.List;

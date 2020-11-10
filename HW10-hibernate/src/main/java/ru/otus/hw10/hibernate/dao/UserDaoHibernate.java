@@ -1,13 +1,8 @@
 package ru.otus.hw10.hibernate.dao;
 
-
-import org.hibernate.Criteria;
-import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.ls.LSOutput;
 import ru.otus.hw10.api.dao.UserDao;
 import ru.otus.hw10.api.exceptions.UserDaoException;
 import ru.otus.hw10.api.model.User;
@@ -15,12 +10,6 @@ import ru.otus.hw10.api.sessionmanager.SessionManager;
 import ru.otus.hw10.hibernate.sessionmanager.DatabaseSessionHibernate;
 import ru.otus.hw10.hibernate.sessionmanager.SessionManagerHibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
