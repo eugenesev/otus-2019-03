@@ -23,7 +23,7 @@ public class UsersRestController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/api/users")
-    protected String userUpdate(@ModelAttribute User user) {
+    protected String userSave(@ModelAttribute User user) {
         User newUser = new User();
         if (user.getName().equals("")) {
             newUser.setName("User dont have a name!");
@@ -42,7 +42,7 @@ public class UsersRestController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/api/users")
-    protected String userSave(@ModelAttribute User user, HttpServletRequest request) {
+    protected String userUpdate(@ModelAttribute User user, HttpServletRequest request) {
 
         User updatingUser = dbServiceUser.getUser(Integer.parseInt(request.getParameter("id"))).orElse(null);
 

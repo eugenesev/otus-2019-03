@@ -12,6 +12,9 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import ru.otus.hw13.api.service.DBServiceUser;
+import ru.otus.hw13.db.DbInitializer;
+import ru.otus.hw13.db.DbInitializerImpl;
 
 @Configuration
 @ComponentScan(basePackages = "ru.otus.hw13")
@@ -50,6 +53,13 @@ public class WebConfig implements WebMvcConfigurer {
         viewResolver.setOrder(1);
         viewResolver.setCharacterEncoding("UTF-8");
         return viewResolver;
+    }
+
+    @Bean
+    public DbInitializer dbInitializer(DBServiceUser dbServiceUser) {
+        DbInitializer dbInitializer = new DbInitializerImpl(dbServiceUser);
+        dbInitializer.init();
+        return dbInitializer;
     }
 
     @Override

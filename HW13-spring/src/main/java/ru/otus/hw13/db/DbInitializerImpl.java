@@ -21,7 +21,6 @@ public class DbInitializerImpl implements DbInitializer {
 
 
     @Override
-    @PostConstruct
     public void init() {
 
         User user1 = new User("Вася", 30);
