@@ -1,0 +1,81 @@
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="users" type="ru.otus.hw13.domain.User"*/-->
+<!--/*@thymesVar id="user" type="ru.otus.hw13.domain.User"*/-->
+<head>
+    <title>Пользователи</title>
+    <script>
+        function getUserPhonesById(id) {
+            const userPhonesContainer = document.getElementById('userPhonesContainer' + id);
+            const getUserPhonesContainer = document.getElementById('getUserPhonesContainer' + id);
+            fetch('api/phones/' + id)
+                .then(response => response.json())
+                .then(phones => userPhonesContainer.textContent = phones);
+            getUserPhonesContainer.style.display = "none";
+        }
+
+        function usersViewDiv() {
+            let divUsers = document.getElementById("divUsers");
+            divUsers.style.display = "block";
+        }
+
+    </script>
+
+    <style>
+        .btn {
+            display: inline-block; /* Строчно-блочный элемент */
+            background: #8C959D; /* Серый цвет фона */
+            color: #fff; /* Белый цвет текста */
+            padding: 1rem 1.5rem; /* Поля вокруг текста */
+            text-decoration: none; /* Убираем подчёркивание */
+            border-radius: 3px; /* Скругляем уголки */
+        }
+
+        #divUsers {
+            display: none;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<a href="#users_table" class="btn" onclick="usersViewDiv()">Получить пользователей</a>
+<a th:href="@{'/users/new_user'}" class="btn">Добавить пользователя</a>
+
+<h4>Список пользователей</h4>
+<a id="users_table"></a>
+<div id="divUsers">
+    <table style="width: 600px">
+        <thead>
+        <tr>
+            <td style='width: 50px'>Id</td>
+            <td style="width: 150px">Имя</td>
+            <td style="width: 100px">Возраст</td>
+            <td style="width: 150px">Адрес</td>
+            <td style='width: 150px'>Телефон</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}">1</td>
+            <td th:text="${user.name}">Вася</td>
+            <td th:text="${user.age}">16</td>
+            <td th:if = "${user.homeAddress != null}"th:text="${user.homeAddress.street}">Садовая</td>
+            <td>
+                <a id="phones"><div th:id="'userPhonesContainer' + ${user.id}" id="userPhonesContainer1"></div></a>
+                <div th:id="'getUserPhonesContainer' + ${user.id}" id="getUserPhonesContainer1">
+                    <a href="#phones" class="btn" th:onclick="' getUserPhonesById(\''+ ${user.id} + '\')'">Показать телефон</a>
+                </div>
+            </td>
+        <td>
+            <a  th:href="@{'/users/' + ${user.id}}" class="btn">Изменить</a>
+        </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
