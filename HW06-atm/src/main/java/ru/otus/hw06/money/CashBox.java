@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class CashBox {
 
-    private Map <Notes, Integer> cash = new HashMap<>();
+    private Map<Notes, Integer> cash = new HashMap<>();
     private int balance;
 
     protected CashBox() {
@@ -15,7 +15,7 @@ public class CashBox {
         return balance;
     }
 
-    public Map <Notes, Integer> getCashBox() {
+    public Map<Notes, Integer> getCashBox() {
         return cash;
     }
 
@@ -55,7 +55,7 @@ public class CashBox {
 
     public void calculateBalance() {
         balance = 0;
-        cash.forEach((k, v) -> balance += k.getNum()*v);
+        cash.forEach((k, v) -> balance += k.getNum() * v);
     }
 
     @Override

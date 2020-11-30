@@ -14,18 +14,15 @@ public class Withdraw implements Operation {
 
     private int consumerCash;
     private float clientBalance;
-    private int consumerBalance;
     private Map<Notes, Integer> consumerCashBundle;
     private ATM atm;
 
     @Override
     public void execute(ATM atm) throws IOException, IllegalAccessException, NoSuchFieldException, SQLException {
         System.out.println("Withdrawing cash");
-
         int atmBalance = atm.getAtmCashBox().getBalance();
-        int cashValue = WithdrawValueAsker.getWithdrawValueFromUser(new WithdrawValueAsker(System.in, System.out));
+        int cashValue = WithdrawValueAsker.getWithdrawValueFromUser(new ValueAsker(System.in, System.out));
         if (atmBalance - cashValue >= 0) {
-            if (cashValue % 50 == 0) {
                 Connection connection = atm.getConnection();
                 AccountService accountService = new AccountService(connection);
                 Account account = accountService.getAccount(atm.getClientCardId()).get();
@@ -42,16 +39,11 @@ public class Withdraw implements Operation {
                     System.out.println("There is not enough money!");
                     atm.choiceOperation(new Withdraw());
                 }
-            } else {
-                System.out.println("Value must be a multiple of 50");
-                atm.choiceOperation(new Withdraw());
-            }
         } else {
             System.out.println("There is not enough money in the ATM");
         }
         this.atm = atm;
         consumerCashBundle = atm.getConsumerCashBundle().getCashBox();
-//        consumerBalance = atm.getConsumerCashBundle().getBalance();
     }
 
     @Override

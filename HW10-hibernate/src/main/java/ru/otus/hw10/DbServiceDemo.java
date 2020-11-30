@@ -13,10 +13,11 @@ import ru.otus.hw10.hibernate.HibernateUtils;
 import ru.otus.hw10.hibernate.dao.UserDaoHibernate;
 import ru.otus.hw10.hibernate.sessionmanager.SessionManagerHibernate;
 
+import java.util.List;
 import java.util.Optional;
 
 public class DbServiceDemo {
-    private static Logger logger = LoggerFactory.getLogger(DbServiceDemo.class);
+    private static final Logger logger = LoggerFactory.getLogger(DbServiceDemo.class);
 
     public static void main(String[] args) {
 
@@ -43,6 +44,10 @@ public class DbServiceDemo {
         user1.setHomeAddress(new HomeAddress("Лесная"));
         id = dbServiceUser.saveUser(user1);
         Optional<User> mayBeUpdatedUser = dbServiceUser.getUser(id);
+
+        List<User> list = dbServiceUser.getAllUsers();
+        System.out.println("users list:");
+        list.forEach(user -> System.out.println("id=" + user.getId() + " name=" + user.getName()));
 
         System.out.println(user1);
         outputUserOptional("Created user", mayBeCreatedUser);

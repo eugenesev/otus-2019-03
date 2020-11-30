@@ -1,0 +1,83 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Пользователи</title>
+    <script>
+        function getUserPhonesById(id) {
+            const userPhonesContainer = document.getElementById('userPhonesContainer' + id);
+            const getUserPhonesContainer = document.getElementById('getUserPhonesContainer' + id);
+            fetch('api/phones/' + id)
+                .then(response => response.json())
+                .then(phones => userPhonesContainer.textContent = phones);
+            getUserPhonesContainer.style.display = "none";
+        }
+
+        function usersViewDiv() {
+            let divUsers = document.getElementById("divUsers");
+            divUsers.style.display = "block";
+        }
+
+    </script>
+
+    <style>
+        .btn {
+            display: inline-block; /* Строчно-блочный элемент */
+            background: #8C959D; /* Серый цвет фона */
+            color: #fff; /* Белый цвет текста */
+            padding: 1rem 1.5rem; /* Поля вокруг текста */
+            text-decoration: none; /* Убираем подчёркивание */
+            border-radius: 3px; /* Скругляем уголки */
+        }
+
+        #divUsers {
+            display: none;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<a href="#users_table" class="btn" onclick="usersViewDiv()">Получить пользователей</a>
+<a href="users/new_user" class="btn">Добавить пользователя</a>
+
+<h4>Список пользователей</h4>
+<a id="users_table"></a>
+<div id="divUsers">
+    <table style="width: 600px">
+        <thead>
+        <tr>
+            <td style='width: 50px'>Id</td>
+            <td style="width: 150px">Имя</td>
+            <td style="width: 100px">Возраст</td>
+            <td style="width: 150px">Адрес</td>
+            <td style='width: 150px'>Телефон</td>
+        </tr>
+        </thead>
+        <tbody>
+        <#list users as user>
+        <tr>
+            <td>${user.id}</td>
+            <td>${user.name}</td>
+            <td>${user.age}</td>
+            <#if user.homeAddress?has_content>
+            <td>${user.homeAddress.street}</td>
+            <#else>
+            <td></td>
+        </#if>
+        <td>
+            <a id="phones"><div id="userPhonesContainer${user.id}"></div></a>
+            <div id="getUserPhonesContainer${user.id}">
+                <a href="#phones" class="btn" onclick='getUserPhonesById(${user.id})'>Показать телефон</a>
+            </div>
+        </td>
+        <td>
+            <a href="users/${user.id}" class="btn">Изменить</a>
+        </td>
+        </tr></#list>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

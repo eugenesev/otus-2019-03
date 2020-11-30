@@ -63,7 +63,9 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
                 .append(entityFields.get(0))
                 .append("= ?, ")
                 .append(entityFields.get(1))
-                .append("= ? ").append("where id = ")
+                .append("= ? where ")
+                .append(PKField.getName().toLowerCase())
+                .append("= ")
                 .append(PKValue);
         Savepoint savePoint = this.connection.setSavepoint("savePoint");
         try (PreparedStatement pst = this.connection.prepareStatement(sqlStatement.toString())) {
@@ -73,7 +75,7 @@ public class DBExecutorImpl<T> implements DBExecutor<T> {
             this.connection.commit();
         } catch (SQLException ex) {
             this.connection.rollback(savePoint);
-            ex.getMessage();
+            System.out.println(ex.getMessage());
         }
     }
 

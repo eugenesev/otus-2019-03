@@ -48,11 +48,6 @@ public class ATMImpl implements ATM {
     }
 
     @Override
-    public ATMCashBoxCaretaker getCaretaker() {
-        return caretaker;
-    }
-
-    @Override
     public void insertClientCard(long no) {
         this.clientCardId = no;
     }
@@ -61,41 +56,20 @@ public class ATMImpl implements ATM {
     public long getClientCardId() {
         return this.clientCardId;
     }
+
     @Override
     public Connection getConnection() {
         return connection;
     }
+
     @Override
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void choiceOperation(Operation operation) throws IOException, IllegalAccessException, NoSuchFieldException, SQLException {
-        if(clientCardId != 0){
-            operation.execute(this);
-            operation.printCheck();
-        }else{
-            System.out.println("Insert your card, please");
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "ATM #" + id;
-    }
-
-    @Override
-    public void linkWith(ATM nextATM) {
-        this.nextATM = nextATM;
-    }
-
-    @Override
-    public int getBalance() {
-        int balance = this.getAtmCashBox().getBalance();
-        System.out.println(this + " " + balance);
-        return balance;
-
+    public ATMCashBoxCaretaker getCaretaker() {
+        return caretaker;
     }
 
     @Override
@@ -107,13 +81,18 @@ public class ATMImpl implements ATM {
     }
 
     @Override
+    public void linkWith(ATM nextATM) {
+        this.nextATM = nextATM;
+    }
+
+    @Override
     public ATM getNextATM() {
         return nextATM;
     }
 
     private void checkNext() {
         if (nextATM != null) {
-            nextATM.getBalance();
+            nextATM.getATMCashBoxBalance();
         }
     }
 
@@ -122,6 +101,29 @@ public class ATMImpl implements ATM {
             return nextATM.restore();
         }
         return 0;
+    }
+
+    @Override
+    public void choiceOperation(Operation operation) throws IOException, IllegalAccessException, NoSuchFieldException, SQLException {
+        if (clientCardId != 0) {
+            operation.execute(this);
+            operation.printCheck();
+        } else {
+            System.out.println("Insert your card, please");
+        }
+    }
+
+    @Override
+    public int getATMCashBoxBalance() {
+        int balance = this.getAtmCashBox().getBalance();
+        System.out.println(this + " " + balance);
+        return balance;
+
+    }
+
+    @Override
+    public String toString() {
+        return "ATM #" + id;
     }
 
 }

@@ -6,7 +6,7 @@ public interface ATMChain {
 
     ATM getNextATM();
 
-    int getBalance();
+    int getATMCashBoxBalance();
 
     int restore();
 

@@ -6,29 +6,20 @@ import ru.otus.hw06.money.ConsumerCashBundle;
 import ru.otus.hw06.operations.Operation;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
-public interface ATM extends ATMChain {
+public interface ATM extends ATMChain, CardReader {
 
     ATMCashBox getAtmCashBox();
 
     void setAtmCashBox(ATMCashBox atmCashBox);
 
+    ATMCashBoxCaretaker getCaretaker();
+
     ConsumerCashBundle getConsumerCashBundle();
 
     void putConsumerCashBundle(ConsumerCashBundle consumerCashBundle);
 
-    void insertClientCard(long no);
-
-    long getClientCardId();
-
-    Connection getConnection();
-
-    void setConnection(Connection connection);
-
     void choiceOperation(Operation operation) throws IOException, IllegalAccessException, NoSuchFieldException, SQLException;
-
-    ATMCashBoxCaretaker getCaretaker();
 
 }

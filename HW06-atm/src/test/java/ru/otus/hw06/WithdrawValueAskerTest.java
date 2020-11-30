@@ -1,9 +1,11 @@
 package ru.otus.hw06;
 
-import static ru.otus.hw06.operations.WithdrawValueAsker.getWithdrawValueFromUser;
-
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import ru.otus.hw06.operations.ValueAsker;
 import ru.otus.hw06.operations.WithdrawValueAsker;
-import org.junit.jupiter.api.*;
+
+import java.util.InputMismatchException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -11,18 +13,36 @@ import static org.mockito.Mockito.*;
 public class WithdrawValueAskerTest {
 
     @Test
-    public void getsWithdrawValue() throws Exception {
-        WithdrawValueAsker asker = mock(WithdrawValueAsker.class);
-        when(asker.ask(anyString())).thenReturn(1000);
-        assertEquals(getWithdrawValueFromUser(asker), 1000);
+    @DisplayName("asksForValueMultipleOf50")
+    public void asksForValueMultipleOf50(){
+        ValueAsker asker = mock(ValueAsker.class);
+        when(asker.ask("Enter value")).thenReturn(50);
+        assertEquals(50, WithdrawValueAsker.getWithdrawValueFromUser(asker));
     }
 
     @Test
-    public void asksForWithdrawValueWhenLessThanFifty() throws Exception {
-        WithdrawValueAsker asker = mock(WithdrawValueAsker.class);
-        when(asker.ask("Enter value")).thenReturn(1);
-        when(asker.ask("Wrong value! Value must be greater than 50, try again.")).thenReturn(50);
-        getWithdrawValueFromUser(asker);
-        verify(asker).ask("Wrong value! Value must be greater than 50, try again.");
+    @DisplayName("asksForValueNotMultipleOf50")
+    public void asksForValueNotMultipleOf50(){
+        ValueAsker asker = mock(ValueAsker.class);
+        when(asker.ask("Enter value")).thenReturn(10);
+        when(asker.ask("Wrong value! Value must be  a multiple of 50, try again.")).thenReturn(50);
+
+        WithdrawValueAsker.getWithdrawValueFromUser(asker);
+
+        verify(asker).ask("Wrong value! Value must be  a multiple of 50, try again.");
     }
+
+    @Test
+    @DisplayName("asksForValueNotANumber")
+    public void asksForValueNotANumber(){
+        ValueAsker asker = mock(ValueAsker.class);
+        when(asker.ask("Enter value")).thenThrow(InputMismatchException.class);
+        when(asker.ask("Wrong value! Try again")).thenReturn(50);
+
+        WithdrawValueAsker.getWithdrawValueFromUser(asker);
+
+        verify(asker).ask("Wrong value! Try again");
+    }
+
+
 }

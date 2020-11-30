@@ -3,12 +3,16 @@ package ru.otus.hw10.api.model;
 import javax.persistence.*;
 import java.util.Objects;
 
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.*;
+import static javax.persistence.GenerationType.*;
+
 @Entity
 @Table(name = "phones")
 public class PhoneDataSet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = SEQUENCE)
     @Column(name = "id", nullable = false)
     private long id;
 
@@ -17,7 +21,7 @@ public class PhoneDataSet {
     @Column(name = "number", length = 20)
     private String number;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = ALL, fetch = LAZY)
     @JoinColumn(name = "fk_person_id", referencedColumnName = "id")
     private User person;
 

@@ -28,10 +28,11 @@ public class AccountService {
 
             Account card = new Account(0, "Card", 123_000.3f);
             accountService.saveAccount(card);
-            card = accountService.getAccount(1).get();
-            card.setRest(100_000.3f);
-            accountService.updateAccount(card);
-            card = accountService.getAccount(1).get();
+            Account card1 = accountService.getAccount(1).get();
+            card1.setRest(100_000.3f);
+            accountService.updateAccount(card1);
+            Account card2 = accountService.getAccount(1).get();
+            System.out.println(card2);
         }
     }
 
@@ -62,7 +63,6 @@ public class AccountService {
                 }
                 return null;
             });
-            System.out.println("account:" + account);
             return account;
         } catch (Exception ex) {
             ex.printStackTrace();
