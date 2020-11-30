@@ -10,3 +10,5 @@ otus-2019-03</p>
 6. [Cвой json object writer](https://github.com/eugenesev/otus-2019-03/tree/master/HW08-json)
 7. [Самодельный ORM](https://github.com/eugenesev/otus-2019-03/tree/master/HW09-jdbc-template)
 8. [Использование Hibernate](https://github.com/eugenesev/otus-2019-03/tree/master/HW10-hibernate)
+9. [Веб сервер](https://github.com/eugenesev/otus-2019-03/tree/master/HW12-web-server)
+10. [Приложение с IoC контейнером](https://github.com/eugenesev/otus-2019-03/tree/master/HW13-spring)
